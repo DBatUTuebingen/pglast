@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.3 (unreleased)
+6.3 (2024-08-06)
 ~~~~~~~~~~~~~~~~
 
 - Fix ``SEQUENCE NAME`` in ``create_seq_stmt_def_elem`` (`PR #151`__), thanks to orages
