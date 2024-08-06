@@ -2042,6 +2042,9 @@ def create_seq_stmt_def_elem(node, output):
         if node.arg:
             output.write(' WITH ')
             output.print_node(node.arg)
+    elif option == 'sequence_name':
+        output.write('SEQUENCE NAME ')
+        output.print_name(node.arg)
     else:
         if node.arg is None:
             output.write('NO ')
