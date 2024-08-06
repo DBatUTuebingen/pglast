@@ -8,6 +8,18 @@ Changes
 Version 6
 #########
 
+6.3 (unreleased)
+~~~~~~~~~~~~~~~~
+
+- Fix ``SEQUENCE NAME`` in ``create_seq_stmt_def_elem`` (`PR #151`__), thanks to orages
+
+  __ https://github.com/lelit/pglast/pull/151
+
+- Generate wheels on PyPI using Python 3.13.0rc1 release, thanks to cibuildwheel `2.20.0`__
+
+  __ https://cibuildwheel.pypa.io/en/stable/changelog/#v2200
+
+
 6.2 (2024-02-01)
 ~~~~~~~~~~~~~~~~
 
