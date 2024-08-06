@@ -19,6 +19,10 @@ Version 6
 
   __ https://cibuildwheel.pypa.io/en/stable/changelog/#v2200
 
+- Use `Cython 3.0.11`__
+
+  __ https://github.com/cython/cython/blob/master/CHANGES.rst#3011-2024-08-05
+
 
 6.2 (2024-02-01)
 ~~~~~~~~~~~~~~~~
