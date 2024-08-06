@@ -1138,9 +1138,11 @@ def column_def(node, output):
             output.print_list(node.fdwoptions, ',')
     if node.collClause:
         output.print_node(node.collClause)
-    if node.is_not_null:
-        # FIXME: find a way to get here
-        output.swrite('NOT NULL')
+    if node.is_not_null:  # pragma: no cover
+        # See issue #150: this flag is currently never set by the underlying libpg_query
+        # parser, it seems some kind of analysis/optimization carried by PG post-parse; should
+        # this ever happen, we shall probably have to rectify ConstrTypePrinter
+        raise NotImplementedError('Unexpected ColumnDef.is_not_null==True')
     if node.constraints:
         output.print_list(node.constraints, '', standalone_items=False)
 
