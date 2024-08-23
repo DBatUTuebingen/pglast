@@ -3,7 +3,7 @@
 # :Created:   sab 29 mag 2021, 21:25:46
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2021, 2022, 2023 Lele Gaifax
+# :Copyright: © 2021, 2022, 2023, 2024 Lele Gaifax
 #
 
 import pytest
@@ -104,3 +104,45 @@ def test_issue_97():
 def test_issue_138():
     raw = parse_sql('select * from foo')[0]
     ast.RawStmt(raw())
+
+
+def test_issue_153():
+    selstmt = parse_sql('select t.y from f(5) as t')[0].stmt
+    serialized = selstmt()
+    assert serialized['@'] == 'SelectStmt'
+    clone = ast.SelectStmt(serialized)
+    orig_fromc = selstmt.fromClause[0]
+    orig_fc_funcs = orig_fromc.functions
+    clone_fromc = clone.fromClause[0]
+    clone_fc_funcs = clone_fromc.functions
+    assert orig_fc_funcs == clone_fc_funcs
+    assert selstmt == clone
+
+
+def test_issue_153b():
+    serialized = {
+        '@': 'RangeFunction',
+        'alias': {'@': 'Alias', 'aliasname': 'tmp', 'colnames': None},
+        'coldeflist': None,
+        'functions': (({'@': 'FuncCall',
+                        'agg_distinct': False,
+                        'agg_filter': None,
+                        'agg_order': None,
+                        'agg_star': False,
+                        'agg_within_group': False,
+                        'args': ({'@': 'A_Const',
+                                  'isnull': False,
+                                  'val': {'@': 'Integer', 'ival': 5}},),
+                        'func_variadic': False,
+                        'funcformat': {'#': 'CoercionForm',
+                                       'name': 'COERCE_EXPLICIT_CALL',
+                                       'value': 0},
+                        'funcname': ({'@': 'String', 'sval': 'f'},),
+                        'location': 21,
+                        'over': None},
+                       None),),
+        'is_rowsfrom': False,
+        'lateral': False,
+        'ordinality': False}
+    rf = ast.RangeFunction(serialized)
+    assert isinstance(rf.functions[0][0], ast.FuncCall)

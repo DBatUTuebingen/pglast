@@ -150,3 +150,20 @@ def test_pg_regress_corpus(filename):
 
         assert orig_ast == serialized_ast, "Statement “%s” from %s at line %d != %r" % (
             trimmed_stmt, rel_src, lineno, serialized)
+
+
+@pytest.mark.parametrize('src,lineno,statement',
+                         ((src, lineno, statement)
+                          for src in sorted(tests_dir.glob('**/*.sql'))
+                          for (lineno, statement) in statements(src)),
+                         ids=make_id)
+def test_ast_serialization_roundtrip(src, lineno, statement):
+    try:
+        orig_ast = parse_sql(statement)
+    except:  # noqa
+        raise RuntimeError("%s:%d:Could not parse %r" % (src, lineno, statement))
+
+    stmt = orig_ast[0].stmt
+    serialized = stmt()
+    clone = stmt.__class__(serialized)
+    assert stmt == clone
