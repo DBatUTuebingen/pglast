@@ -33,6 +33,20 @@ from enum import Enum
 SlotTypeInfo = namedtuple('SlotTypeInfo', ['c_type', 'py_type', 'adaptor'])
 
 
+def _deserialize_value(value):
+    if isinstance(value, dict) and '@' in value:
+        G = globals()
+        if len(value) > 1:
+            result = G[value['@']](value)
+        else:
+            result = G[value['@']]()
+    elif isinstance(value, (tuple, list)):
+        result = tuple(_deserialize_value(item) for item in value)
+    else:
+        result = value
+    return result
+
+
 def _serialize_node(n, depth, ellipsis, skip_none):
     d = {{'@': n.__class__.__name__}}
     for a in n:
@@ -89,19 +103,10 @@ class Node:
             raise ValueError(f'Bad argument, wrong "@" value, expected'
                              f' {{self.__class__.__name__!r}}, got {{data["@"]!r}}')
 
-        G = globals()
         for a in self:
             v = data.get(a)
             if v is not None:
-                if isinstance(v, dict) and '@' in v:
-                    if len(v) > 1:
-                        v = G[v['@']](v)
-                    else:
-                        v = G[v['@']]()
-                elif isinstance(v, (tuple, list)):
-                    v = tuple((G[i['@']](i) if len(i) > 1 else G[i['@']]())
-                              if isinstance(i, dict) and '@' in i else i
-                              for i in v)
+                v = _deserialize_value(v)
             setattr(self, a, v)
 
     def __iter__(self):
