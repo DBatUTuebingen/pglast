@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from primnodes.h @ 16-5.1.0-0-g1ec3894
+# :Project:   pglast -- DO NOT EDIT: automatically extracted from primnodes.h @ 16-latest-0-g680f5ee
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © 2017-2024 Lele Gaifax
