@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.4 (unreleased)
+6.4 (2024-09-28)
 ~~~~~~~~~~~~~~~~
 
 - Fix issue with deserialization of deeply nested ASTs (issue `#153`__)
