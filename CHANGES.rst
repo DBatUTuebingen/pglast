@@ -8,6 +8,20 @@ Changes
 Version 6
 #########
 
+6.4 (unreleased)
+~~~~~~~~~~~~~~~~
+
+- Fix issue with deserialization of deeply nested ASTs (issue `#153`__)
+
+  __ https://github.com/lelit/pglast/issues/153
+
+- Upgrade libpg_query to not-yet-publicly-released `680f5ee67c6fdae497c8d1edfadd02b9b8eac74f
+  commit`__, to solve an issue related to `plpgsql` (issue `#154`__)
+
+  __ https://github.com/pganalyze/libpg_query/commit/680f5ee67c6fdae497c8d1edfadd02b9b8eac74f
+  __ https://github.com/lelit/pglast/issues/154
+
+
 6.3 (2024-08-06)
 ~~~~~~~~~~~~~~~~
 
