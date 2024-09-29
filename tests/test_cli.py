@@ -125,6 +125,12 @@ SELECT 'abc'
                 main(['--preserve-comments'])
             assert output.getvalue() == "SELECT /* one */ 1\n"
 
+    with StringIO("CREATE TABLESPACE tbl LOCATION 'dir' -- comment") as input:
+        with UnclosableStream() as output:
+            with redirect_stdin(input), redirect_stdout(output):
+                main(['--preserve-comments'])
+            assert output.getvalue() == "CREATE TABLESPACE tbl LOCATION 'dir' -- comment\n\n"
+
     with StringIO("""\
 select collation for ('abc'),
        normalize('abc', nfc),

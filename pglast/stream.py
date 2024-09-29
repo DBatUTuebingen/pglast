@@ -3,7 +3,7 @@
 # :Created:   mer 02 ago 2017 15:46:11 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2020, 2021, 2022, 2023 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Lele Gaifax
 #
 
 from contextlib import contextmanager
@@ -353,7 +353,7 @@ class RawStream(OutputStream):
         """
 
         if self.comments:
-            if hasattr(node, 'location'):
+            if hasattr(node, 'location')  and isinstance(getattr(node, 'location'), int):
                 node_location = getattr(node, 'location')
             elif hasattr(node, 'stmt_location'):
                 node_location = getattr(node, 'stmt_location')
