@@ -3,12 +3,12 @@
 .. :Created:   gio 10 ago 2017 10:19:26 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2021, 2023 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2021, 2023, 2024 Lele Gaifax
 ..
 
-===========================================================
+==========================================================
  :mod:`pglast.parser` --- The interface with libpg_query
-===========================================================
+==========================================================
 
 .. module:: pglast.parser
    :synopsis: The interface with libpg_query
