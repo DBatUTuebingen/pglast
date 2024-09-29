@@ -3,7 +3,7 @@
 # :Created:   mer 02 ago 2017 15:11:02 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021, 2022 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2022, 2024 Lele Gaifax
 #
 
 from collections import namedtuple
@@ -26,10 +26,123 @@ __author__ = 'Lele Gaifax <lele@metapensiero.it>'
 
 
 def parse_plpgsql(statement):
-    """Parse the given ``PLPGSQL`` `statement` and return its abstract syntax tree.
+    """Parse the given ``PLPGSQL`` `statement` and return its tokens stream.
 
-    Note that this currently returns the raw tree, represented by plain Python structures such
-    as lists, dictionaries and scalar values.
+   .. note:: This is currently somewhat of limited usefulness, because neither ``libpg_query``
+      [#]_ nor ``pglast`` expose proper ``AST`` nodes for the PostgreSQL's procedural extension
+      language, and thus it returns the raw tree, represented by plain Python structures such
+      as lists, dictionaries and scalar values.
+
+      Consider the following examples, two different ways to parse the same ``SQL`` statement.
+      The first uses :func:`parse_plpgsql`:
+
+      .. testcode::
+
+         from pprint import pprint
+         from pglast import parse_plpgsql
+
+         STMT = '''\\
+         CREATE FUNCTION add (a integer, b integer)
+         RETURNS integer AS $$
+         BEGIN
+           RETURN a + b;
+         END;
+         $$ LANGUAGE plpgsql
+         '''
+
+         as_plpgsql = parse_plpgsql(STMT)
+         pprint(as_plpgsql, depth=6)
+
+      and emits this structure:
+
+      .. testoutput::
+         :options: -ELLIPSIS
+
+         [{'PLpgSQL_function': {'action': {'PLpgSQL_stmt_block': {'body': [{...}],
+                                                                  'lineno': 2}},
+                                'datums': [{'PLpgSQL_var': {'datatype': {...},
+                                                            'refname': 'a'}},
+                                           {'PLpgSQL_var': {'datatype': {...},
+                                                            'refname': 'b'}},
+                                           {'PLpgSQL_var': {'datatype': {...},
+                                                            'refname': 'found'}}]}}]
+
+      As you can see, is just a list of plain Python dictionaries, more or less representing
+      *syntax tokens*.
+
+      If you use :func:`~.parser.parse_sql` instead:
+
+      .. testcode::
+
+         from pglast import parse_sql
+
+         as_sql = parse_sql(STMT)
+         pprint([stmt(skip_none=True) for stmt in as_sql])
+
+      you obtain a richer representation of the statement:
+
+      .. testoutput::
+         :options: -ELLIPSIS
+
+         [{'@': 'RawStmt',
+           'stmt': {'@': 'CreateFunctionStmt',
+                    'funcname': ({'@': 'String', 'sval': 'add'},),
+                    'is_procedure': False,
+                    'options': ({'@': 'DefElem',
+                                 'arg': ({'@': 'String',
+                                          'sval': '\\nBEGIN\\n  RETURN a + b;\\nEND;\\n'},),
+                                 'defaction': {'#': 'DefElemAction',
+                                               'name': 'DEFELEM_UNSPEC',
+                                               'value': 0},
+                                 'defname': 'as',
+                                 'location': 68},
+                                {'@': 'DefElem',
+                                 'arg': {'@': 'String', 'sval': 'plpgsql'},
+                                 'defaction': {'#': 'DefElemAction',
+                                               'name': 'DEFELEM_UNSPEC',
+                                               'value': 0},
+                                 'defname': 'language',
+                                 'location': 104}),
+                    'parameters': ({'@': 'FunctionParameter',
+                                    'argType': {'@': 'TypeName',
+                                                'location': 32,
+                                                'names': ({'@': 'String',
+                                                           'sval': 'pg_catalog'},
+                                                          {'@': 'String',
+                                                           'sval': 'int4'}),
+                                                'pct_type': False,
+                                                'setof': False,
+                                                'typemod': -1},
+                                    'mode': {'#': 'FunctionParameterMode',
+                                             'name': 'FUNC_PARAM_DEFAULT',
+                                             'value': 'd'},
+                                    'name': 'a'},
+                                   {'@': 'FunctionParameter',
+                                    'argType': {'@': 'TypeName',
+                                                'location': 43,
+                                                'names': ({'@': 'String',
+                                                           'sval': 'pg_catalog'},
+                                                          {'@': 'String',
+                                                           'sval': 'int4'}),
+                                                'pct_type': False,
+                                                'setof': False,
+                                                'typemod': -1},
+                                    'mode': {'#': 'FunctionParameterMode',
+                                             'name': 'FUNC_PARAM_DEFAULT',
+                                             'value': 'd'},
+                                    'name': 'b'}),
+                    'replace': False,
+                    'returnType': {'@': 'TypeName',
+                                   'location': 60,
+                                   'names': ({'@': 'String', 'sval': 'pg_catalog'},
+                                             {'@': 'String', 'sval': 'int4'}),
+                                   'pct_type': False,
+                                   'setof': False,
+                                   'typemod': -1}},
+           'stmt_len': 0,
+           'stmt_location': 0}]
+
+      .. [#] See also https://github.com/pganalyze/libpg_query/issues/110.
     """
 
     from json import loads
