@@ -8,6 +8,19 @@ Changes
 Version 6
 #########
 
+6.5 (unreleased)
+~~~~~~~~~~~~~~~~
+
+- Fix glitch when using the ``--preserve-comments`` flag (issue `#159`__)
+
+  __ https://github.com/lelit/pglast/issues/159
+
+- Finally add a note to ``parse_plpgsql()`` documentation mentioning how it differs from
+  ``parse_sql()`` (issue `#88`__)
+
+  __ https://github.com/lelit/pglast/issues/88
+
+
 6.4 (2024-09-28)
 ~~~~~~~~~~~~~~~~
 
