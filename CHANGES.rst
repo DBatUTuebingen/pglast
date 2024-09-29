@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.5 (unreleased)
+6.5 (2024-09-29)
 ~~~~~~~~~~~~~~~~
 
 - Fix glitch when using the ``--preserve-comments`` flag (issue `#159`__)
