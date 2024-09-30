@@ -79,10 +79,10 @@ def parse_plpgsql(statement):
          as_sql = parse_sql(STMT)
          pprint([stmt(skip_none=True) for stmt in as_sql])
 
-      you obtain a richer representation of the statement:
+      you obtain a richer representation\\[#]_ of the statement:
 
       .. testoutput::
-         :options: -ELLIPSIS
+         :options: +ELLIPSIS
 
          [{'@': 'RawStmt',
            'stmt': {'@': 'CreateFunctionStmt',
@@ -95,17 +95,17 @@ def parse_plpgsql(statement):
                                                'name': 'DEFELEM_UNSPEC',
                                                'value': 0},
                                  'defname': 'as',
-                                 'location': 68},
+                                 'location': ...},
                                 {'@': 'DefElem',
                                  'arg': {'@': 'String', 'sval': 'plpgsql'},
                                  'defaction': {'#': 'DefElemAction',
                                                'name': 'DEFELEM_UNSPEC',
                                                'value': 0},
                                  'defname': 'language',
-                                 'location': 104}),
+                                 'location': ...}),
                     'parameters': ({'@': 'FunctionParameter',
                                     'argType': {'@': 'TypeName',
-                                                'location': 32,
+                                                'location': ...,
                                                 'names': ({'@': 'String',
                                                            'sval': 'pg_catalog'},
                                                           {'@': 'String',
@@ -119,7 +119,7 @@ def parse_plpgsql(statement):
                                     'name': 'a'},
                                    {'@': 'FunctionParameter',
                                     'argType': {'@': 'TypeName',
-                                                'location': 43,
+                                                'location': ...,
                                                 'names': ({'@': 'String',
                                                            'sval': 'pg_catalog'},
                                                           {'@': 'String',
@@ -133,7 +133,7 @@ def parse_plpgsql(statement):
                                     'name': 'b'}),
                     'replace': False,
                     'returnType': {'@': 'TypeName',
-                                   'location': 60,
+                                   'location': ...,
                                    'names': ({'@': 'String', 'sval': 'pg_catalog'},
                                              {'@': 'String', 'sval': 'int4'}),
                                    'pct_type': False,
@@ -143,6 +143,7 @@ def parse_plpgsql(statement):
            'stmt_location': 0}]
 
       .. [#] See also https://github.com/pganalyze/libpg_query/issues/110.
+      .. [#] ``location`` values has been masqueraded for test purposes.
     """
 
     from json import loads
