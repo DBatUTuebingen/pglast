@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.6 (unreleased)
+6.6 (2024-09-30)
 ~~~~~~~~~~~~~~~~
 
 - Make recently introduced doctest related to issue #88 work on different Python versions
