@@ -68,7 +68,7 @@ such as dictionaries and tuples:
     'op': {'#': 'SetOperation', 'name': 'SETOP_NONE', 'value': 0},
     'targetList': ({'@': 'ResTarget', 'location': 7, 'val': …},)}
 
-As you can see, each node is serialized to a dictionary containing at least on *special* key,
+As you can see, each node is serialized to a dictionary containing at least one *special* key,
 ``@``, with the *tag name* of the node; lists of nodes are converted to tuples, and ``Enum``
 instances to a dictionary with a special ``#`` key carrying the name of data type, and two
 other keys ``name`` and ``value`` respectively with the name and value of the enum value.
