@@ -1,9 +1,9 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- PG keywords
+.. :Project:   pglast — PG keywords
 .. :Created:   gio 10 ago 2017 13:16:54 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2021 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2021, 2024 Lele Gaifax
 ..
 
 =================================================================

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Visitors base machinery
+# :Project:   pglast — Visitors base machinery
 # :Created:   dom 9 mag 2021, 16:15:05
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2021, 2022 Lele Gaifax
+# :Copyright: © 2021, 2022, 2024 Lele Gaifax
 #
 
 from collections import deque

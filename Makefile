@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Development Makefile
+# :Project:   pglast — Development Makefile
 # :Created:   gio 03 ago 2017 14:52:45 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later

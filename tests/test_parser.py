@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Test the parser.pyx module
+# :Project:   pglast — Test the parser.pyx module
 # :Created:   ven 04 ago 2017 08:37:10 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021, 2023 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2023, 2024 Lele Gaifax
 #
 
 import json

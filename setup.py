@@ -1,5 +1,5 @@
 # -*- coding: utf-8; mode: python -*-
-# :Project:   pglast -- PostgreSQL Languages AST
+# :Project:   pglast — PostgreSQL Languages AST
 # :Created:   mer 02 ago 2017 15:20:43 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later

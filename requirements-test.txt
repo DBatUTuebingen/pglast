@@ -1,5 +1,5 @@
 # -*- coding: utf-8; mode: conf-unix -*-
-# :Project:   pglast -- Test requirements
+# :Project:   pglast — Test requirements
 # :Created:   lun 07 ago 2017 00:43:41 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later

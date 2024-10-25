@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Extract enums from PostgreSQL headers
+# :Project:   pglast — Extract enums from PostgreSQL headers
 # :Created:   gio 03 ago 2017 14:54:39 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
@@ -19,7 +19,7 @@ CYEARS = f'2017-{date.today().year}'
 
 PY_HEADER = f"""\
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from %s @ %s
+# :Project:   pglast — DO NOT EDIT: automatically extracted from %s @ %s
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © {CYEARS} Lele Gaifax
@@ -38,7 +38,7 @@ except ImportError:  # pragma: no cover
 
 RST_HEADER = f"""\
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- DO NOT EDIT: generated automatically
+.. :Project:   pglast — DO NOT EDIT: generated automatically
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
 .. :Copyright: © {CYEARS} Lele Gaifax

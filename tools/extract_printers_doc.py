@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Extract printer functions doc
+# :Project:   pglast — Extract printer functions doc
 # :Created:   gio 09 nov 2017 12:56:35 CET
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2020, 2022, 2023 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2020, 2022, 2023, 2024 Lele Gaifax
 #
 
 from datetime import date
@@ -17,7 +17,7 @@ CYEARS = f'2017-{date.today().year}'
 
 RST_HEADER = f"""\
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- DO NOT EDIT: generated automatically
+.. :Project:   pglast — DO NOT EDIT: generated automatically
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
 .. :Copyright: © {CYEARS} Lele Gaifax

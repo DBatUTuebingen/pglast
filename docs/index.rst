@@ -1,9 +1,9 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- Documentation
+.. :Project:   pglast — Documentation
 .. :Created:   gio 10 ago 2017 09:56:59 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2019, 2021, 2022, 2023 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2019, 2021, 2022, 2023, 2024 Lele Gaifax
 ..
 
 ========

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Tests ast module
+# :Project:   pglast — Tests ast module
 # :Created:   sab 29 mag 2021, 21:25:46
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later

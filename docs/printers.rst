@@ -1,9 +1,9 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- Per-node specialized printer functions
+.. :Project:   pglast — Per-node specialized printer functions
 .. :Created:   gio 10 ago 2017 13:23:18 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2021, 2022 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2021, 2022, 2024 Lele Gaifax
 ..
 
 ==========================================================

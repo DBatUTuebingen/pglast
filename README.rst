@@ -1,9 +1,9 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- PostgreSQL Languages AST
+.. :Project:   pglast — PostgreSQL Languages AST
 .. :Created:   mer 02 ago 2017 14:49:24 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2019, 2020, 2021, 2022, 2023 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Lele Gaifax
 ..
 
 ========

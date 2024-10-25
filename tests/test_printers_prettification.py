@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Assert printers emit beautiful code
+# :Project:   pglast — Assert printers emit beautiful code
 # :Created:   dom 17 mar 2019 10:46:03 CET
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2019, 2020, 2021 Lele Gaifax
+# :Copyright: © 2019, 2020, 2021, 2024 Lele Gaifax
 #
 
 from ast import literal_eval

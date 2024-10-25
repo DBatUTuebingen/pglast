@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Special functions
+# :Project:   pglast — Special functions
 # :Created:   mer 22 nov 2017 08:34:34 CET
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2021, 2022 Lele Gaifax
+# :Copyright: © 2017, 2018, 2021, 2022, 2024 Lele Gaifax
 #
 
 from . import special_function

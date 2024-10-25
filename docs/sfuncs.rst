@@ -1,9 +1,9 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- Special functions documentation
+.. :Project:   pglast — Special functions documentation
 .. :Created:   mer 22 nov 2017 09:04:18 CET
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2024 Lele Gaifax
 ..
 
 ===============================================================

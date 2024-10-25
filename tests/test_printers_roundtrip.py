@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Assert printers eat their own result
+# :Project:   pglast — Assert printers eat their own result
 # :Created:   dom 17 mar 2019 09:24:11 CET
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later

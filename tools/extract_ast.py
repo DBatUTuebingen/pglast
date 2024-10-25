@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Wrap PG nodes into a Python AST
+# :Project:   pglast — Wrap PG nodes into a Python AST
 # :Created:   sab 27 feb 2021, 19:47:11
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
@@ -19,7 +19,7 @@ CYEARS = f'2021-{date.today().year}'
 
 AST_PY_HEADER = f"""\
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from struct_defs.json @ %s
+# :Project:   pglast — DO NOT EDIT: automatically extracted from struct_defs.json @ %s
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © {CYEARS} Lele Gaifax
@@ -236,7 +236,7 @@ class Expr(Node):
 
 AST_PYX_HEADER = f"""\
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from struct_defs.json @ %s
+# :Project:   pglast — DO NOT EDIT: automatically extracted from struct_defs.json @ %s
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © {CYEARS} Lele Gaifax
@@ -282,7 +282,7 @@ cdef _pg_list_to_tuple(const structs.List* lst, offset_to_index):
 
 STRUCTS_PXD_HEADER = f"""\
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from struct_defs.json @ %s
+# :Project:   pglast — DO NOT EDIT: automatically extracted from struct_defs.json @ %s
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © {CYEARS} Lele Gaifax
@@ -358,7 +358,7 @@ from libc.stdint cimport int16_t, int32_t, uint32_t, uint64_t
 
 AST_RST_HEADER = f"""\
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- DO NOT EDIT: generated automatically
+.. :Project:   pglast — DO NOT EDIT: generated automatically
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
 .. :Copyright: © {CYEARS} Lele Gaifax

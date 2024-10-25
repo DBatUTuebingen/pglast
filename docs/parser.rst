@@ -1,5 +1,5 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- Parser module
+.. :Project:   pglast — Parser module
 .. :Created:   gio 10 ago 2017 10:19:26 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later

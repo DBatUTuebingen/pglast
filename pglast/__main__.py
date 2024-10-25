@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Simple frontend to the pretty reformatter
+# :Project:   pglast — Simple frontend to the pretty reformatter
 # :Created:   dom 06 ago 2017 23:09:23 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2024 Lele Gaifax
 #
 
 import argparse

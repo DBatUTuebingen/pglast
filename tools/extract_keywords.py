@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Extract keywords from PostgreSQL header
+# :Project:   pglast — Extract keywords from PostgreSQL header
 # :Created:   dom 06 ago 2017 23:34:53 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021, 2022, 2023 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2022, 2023, 2024 Lele Gaifax
 #
 
 from datetime import date
@@ -18,7 +18,7 @@ CYEARS = f'2017-{date.today().year}'
 
 HEADER = f"""\
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from %s @ %s
+# :Project:   pglast — DO NOT EDIT: automatically extracted from %s @ %s
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © {CYEARS} Lele Gaifax

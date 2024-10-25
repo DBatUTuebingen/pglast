@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Tests on the visitors module
+# :Project:   pglast — Tests on the visitors module
 # :Created:   mar 11 mag 2021, 08:36:23
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2021, 2022 Lele Gaifax
+# :Copyright: © 2021, 2022, 2024 Lele Gaifax
 #
 
 import pytest

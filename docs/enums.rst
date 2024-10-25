@@ -1,9 +1,9 @@
 .. -*- coding: utf-8 -*-
-.. :Project:   pglast -- Enums documentation
+.. :Project:   pglast — Enums documentation
 .. :Created:   gio 10 ago 2017 12:44:33 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2019, 2021 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2019, 2021, 2024 Lele Gaifax
 ..
 
 ================================================

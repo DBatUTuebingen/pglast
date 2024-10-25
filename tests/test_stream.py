@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- Tests on the stream.py module
+# :Project:   pglast — Tests on the stream.py module
 # :Created:   sab 05 ago 2017 10:31:23 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021, 2022 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2022, 2024 Lele Gaifax
 #
 
 import pytest
