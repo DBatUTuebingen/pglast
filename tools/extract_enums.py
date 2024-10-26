@@ -33,7 +33,6 @@ except ImportError:  # pragma: no cover
     # Python < 3.10
     class StrEnum(str, Enum):
         pass
-
 """
 
 RST_HEADER = f"""\
@@ -200,7 +199,7 @@ def determine_enum_type_and_value(enum):
 
 def write_enum(name, enum, output):
     enum_type, value_factory = determine_enum_type_and_value(enum)
-    output.write('\n')
+    output.write('\n\n')
     output.write('class %s(%s):\n' % (name, enum_type))
     for index, item in enumerate(enum.values.enumerators):
         output.write('    %s = %s\n' % (item.name, value_factory(index, item)))
