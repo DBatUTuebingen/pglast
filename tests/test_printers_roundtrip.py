@@ -46,23 +46,25 @@ def test_printers_roundtrip(src, lineno, statement):
     try:
         orig_ast = parse_sql(statement)
     except:  # noqa
-        raise RuntimeError("%s:%d:Could not parse %r" % (src, lineno, statement))
+        raise RuntimeError("%s:%d:Could not parse “%s”" % (src, lineno, statement))
 
     serialized = RawStream()(orig_ast)
     try:
         serialized_ast = parse_sql(serialized)
     except:  # noqa
-        raise RuntimeError("%s:%d:Could not reparse %r" % (src, lineno, serialized))
+        raise RuntimeError("%s:%d:Could not reparse “%s”" % (src, lineno, serialized))
 
-    assert orig_ast == serialized_ast, "%s:%s:%r != %r" % (src, lineno, statement, serialized)
+    assert orig_ast == serialized_ast, ("Statement “%s” from %s at line %d != “%s”"
+                                      % (statement, src, lineno, serialized))
 
     indented = IndentedStream()(orig_ast)
     try:
         indented_ast = parse_sql(indented)
     except:  # noqa
-        raise RuntimeError("%s:%d:Could not reparse %r" % (src, lineno, indented))
+        raise RuntimeError("%s:%d:Could not reparse “%s”" % (src, lineno, indented))
 
-    assert orig_ast == indented_ast, "%s:%d:%r != %r" % (src, lineno, statement, indented)
+    assert orig_ast == indented_ast, ("Statement “%s” from %s at line %d != “%s”"
+                                      % (statement, src, lineno, indented))
 
     # Run ``pytest -s tests/`` to see the following output
     print()
@@ -79,7 +81,7 @@ def test_stream_call_with_single_node(src, lineno, statement):
     try:
         parsed = parse_sql(statement)
     except:  # noqa
-        raise RuntimeError("%s:%d:Could not parse %r" % (src, lineno, statement))
+        raise RuntimeError("%s:%d:Could not parse “%s”" % (src, lineno, statement))
     for rawstmt in parsed:
         stmt = rawstmt.stmt
         try:
@@ -145,10 +147,10 @@ def test_pg_regress_corpus(filename):
         try:
             serialized_ast = parse_sql(serialized)
         except Exception as e:
-            raise RuntimeError("Statement “%s” from %s at line %d, could not reparse %r: %s"
+            raise RuntimeError("Statement “%s” from %s at line %d, could not reparse “%s”: %s"
                                % (trimmed_stmt, rel_src, lineno, serialized, e))
 
-        assert orig_ast == serialized_ast, "Statement “%s” from %s at line %d != %r" % (
+        assert orig_ast == serialized_ast, "Statement “%s” from %s at line %d != “%s”" % (
             trimmed_stmt, rel_src, lineno, serialized)
 
 
