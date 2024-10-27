@@ -129,7 +129,8 @@ class Node:
             attrs = ''
         return '<' + self.__class__.__name__ + attrs + '>'
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = {{'location', 'stmt_len', 'stmt_location'}}
+    # Set of attributes that are semantically meaningless, mostly statement offset and length
+    _ATTRS_TO_IGNORE_IN_COMPARISON = {{'stmt_len'}}
 
     def __eq__(self, other):
         '''
@@ -143,8 +144,7 @@ class Node:
         if not isinstance(other, type(self)):
             return False
         for a in self:
-            if ((a not in self._ATTRS_TO_IGNORE_IN_COMPARISON
-                 and getattr(self, a) != getattr(other, a))):
+            if a not in self._ATTRS_TO_IGNORE_IN_COMPARISON and getattr(self, a) != getattr(other, a):
                 return False
         return True
 
@@ -307,6 +307,10 @@ cdef extern from "nodes/bitmapset.h":
         pass
 
     int bms_next_member(const Bitmapset *a, int prevbit)
+
+
+cdef extern from "nodes/nodes.h":
+    ctypedef int ParseLoc
 
 
 cdef extern from "nodes/pg_list.h":
@@ -566,7 +570,7 @@ def emit_stmt_len_attr(name, ctype, output):
 def emitter_for(fname, ctype, enums):
     from pglast import enums as eimpl
 
-    if fname == 'location' and ctype == 'int' or fname == 'stmt_location':
+    if ctype == 'ParseLoc':
         emitter = emit_location_attr
     elif fname == 'stmt_len':
         emitter = emit_stmt_len_attr
@@ -620,7 +624,7 @@ def emit_node_def(name, fields, enums, url, output, doc):
         if iskeyword(fname):
             fname = f'{fname}_'
 
-        if ctype == 'CoercionForm':
+        if ctype in ('CoercionForm', 'ParseLoc'):
             attrs_to_ignore_in_comparison.add(fname)
 
         emitter = emitter_for(fname, ctype, enums)
@@ -952,7 +956,7 @@ def _fixup_attribute_types_in_slots():
                                       else i
                                       for i in value)
                     return value
-            elif ctype in {'AclMode', 'AttrNumber', 'Index', 'RelFileNumber',
+            elif ctype in {'AclMode', 'AttrNumber', 'Index', 'ParseLoc', 'RelFileNumber',
                            'SubTransactionId', 'bits32', 'int', 'int16', 'int32', 'long',
                            'uint32', 'uint64'}:
                 ptype = int
