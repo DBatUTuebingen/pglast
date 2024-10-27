@@ -227,14 +227,14 @@ def alter_object_schema_stmt(node, output):
     output.writes(OBJECT_NAMES[objtype])
     if node.missing_ok:
         output.write(' IF EXISTS ')
-    if objtype in (OT.OBJECT_TABLE,
-                   OT.OBJECT_VIEW,
-                   OT.OBJECT_FOREIGN_TABLE,
-                   OT.OBJECT_MATVIEW):
+    if objtype in {OT.OBJECT_FOREIGN_TABLE,
+                   OT.OBJECT_MATVIEW,
+                   OT.OBJECT_SEQUENCE,
+                   OT.OBJECT_TABLE,
+                   OT.OBJECT_VIEW}:
         output.print_name(node.relation)
     else:
-        if objtype in (OT.OBJECT_OPFAMILY,
-                       OT.OBJECT_OPCLASS):
+        if objtype in (OT.OBJECT_OPCLASS, OT.OBJECT_OPFAMILY):
             method, *name = node.object
             output.print_name(name)
             output.write(' USING ')
@@ -724,7 +724,17 @@ class AlterTableTypePrinter(IntEnumPrinter):
 
     def AT_SetAccessMethod(self, node, output):
         output.write('SET ACCESS METHOD ')
+        if node.name is None:
+            output.write('DEFAULT')
+        else:
+            output.print_name(node.name)
+
+    def AT_SetExpression(self, node, output):
+        output.write('ALTER COLUMN ')
         output.print_name(node.name)
+        output.write('SET EXPRESSION AS ')
+        with output.expression(True):
+            output.print_node(node.def_)
 
 
 alter_table_type_printer = AlterTableTypePrinter()
@@ -1368,7 +1378,8 @@ def constraint(node, output):
         output.write(' USING INDEX ')
         output.print_name(node.indexname)
     # Common to UNIQUE & PRIMARY_KEY
-    if node.keys:
+    if node.keys and node.contype in (enums.ConstrType.CONSTR_UNIQUE,
+                                      enums.ConstrType.CONSTR_PRIMARY):
         output.write(' ')
         with output.expression(True):
             output.print_name(node.keys, ',')

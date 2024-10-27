@@ -167,9 +167,10 @@ def a_indices(node, output):
 
 @node_printer(ast.A_Indirection)
 def a_indirection(node, output):
-    with output.expression(isinstance(node.arg, (ast.A_ArrayExpr, ast.A_Expr,
-                                                 ast.A_Indirection, ast.FuncCall,
-                                                 ast.RowExpr, ast.TypeCast))
+    with output.expression(isinstance(node.arg,
+                                      (ast.A_ArrayExpr, ast.A_Expr, ast.FuncCall,
+                                       ast.A_Indirection, ast.JsonFuncExpr, ast.RowExpr,
+                                       ast.TypeCast))
                            or (isinstance(node.arg, ast.ColumnRef)
                                and not isinstance(node.indirection[0], ast.A_Indices))):
         output.print_node(node.arg)
@@ -498,8 +499,9 @@ def copy_stmt(node, output):
 def copy_stmt_def_elem(node, output):
     option = node.defname
     argv = node.arg
-    if option == 'format':
-        output.write('FORMAT ')
+    if option in {'format', 'log_verbosity', 'on_error'}:
+        output.write(option.upper())
+        output.write(' ')
         output.print_symbol(argv)
     elif option == 'freeze':
         output.write('FREEZE')
@@ -507,50 +509,28 @@ def copy_stmt_def_elem(node, output):
             output.swrite(argv.sval.upper())
         elif isinstance(argv, ast.Integer):
             output.swrite(str(argv.ival))
-    elif option == 'delimiter':
-        output.write('DELIMITER ')
-        output.print_node(argv)
-    elif option == 'null':
-        output.write('NULL ')
+    elif option in {'default', 'delimiter', 'encoding', 'escape', 'null', 'quote'}:
+        output.write(option.upper())
+        output.write(' ')
         output.print_node(argv)
     elif option == 'header':
         output.write('HEADER')
         if argv is not None:
             output.swrite(argv.sval.upper())
-    elif option == 'quote':
-        output.write('QUOTE ')
-        output.print_node(argv)
-    elif option == 'escape':
-        output.write('ESCAPE ')
-        output.print_node(argv)
-    elif option == 'force_quote':
-        output.write('FORCE_QUOTE ')
+    elif option in {'force_quote', 'force_not_null', 'force_null'}:
+        output.write(option.upper())
+        output.write(' ')
         # If it is a list print it.
         if isinstance(argv, tuple):
             with output.expression(True):
                 output.print_list(argv, are_names=True)
         else:
             output.write('*')
-    elif option == 'force_null':
-        output.write('FORCE_NULL ')
-        with output.expression(True):
-            output.print_list(argv, are_names=True)
-    elif option == 'force_not_null':
-        output.write('FORCE_NOT_NULL ')
-        with output.expression(True):
-            output.print_list(argv, are_names=True)
-    elif option == 'encoding':
-        output.write('ENCODING ')
-        output.print_node(argv)
     elif option == 'convert_selectively':
-        output.write(option)
+        output.write(option.upper())
         output.write(' ')
         with output.expression(True):
             output.print_name(argv)
-    elif option == 'default':
-        output.write(option)
-        output.write(' ')
-        output.print_node(argv)
     else:
         raise NotImplementedError(option)
 
@@ -951,6 +931,13 @@ def json_agg_constructor(node, output):
         output.print_node(node.output)
 
 
+@node_printer(ast.JsonArgument)
+def json_argument(node, output):
+    output.print_node(node.val)
+    output.write(' AS ')
+    output.print_name(node.name)
+
+
 @node_printer(ast.JsonArrayAgg)
 def json_array_agg(node, output):
     output.write('json_arrayagg')
@@ -991,6 +978,46 @@ def json_array_query_constructor(node, output):
             output.print_node(node.output)
 
 
+class JsonBehaviorTypePrinter(IntEnumPrinter):
+    enum = enums.JsonBehaviorType
+
+    def JSON_BEHAVIOR_NULL(self, node, output):
+        output.write('NULL')
+
+    def JSON_BEHAVIOR_ERROR(self, node, output):
+        output.write('ERROR')
+
+    def JSON_BEHAVIOR_EMPTY(self, node, output):
+        output.write('EMPTY')
+
+    def JSON_BEHAVIOR_TRUE(self, node, output):
+        output.write('TRUE')
+
+    def JSON_BEHAVIOR_FALSE(self, node, output):
+        output.write('FALSE')
+
+    def JSON_BEHAVIOR_UNKNOWN(self, node, output):
+        output.write('UNKNOWN')
+
+    def JSON_BEHAVIOR_EMPTY_ARRAY(self, node, output):
+        output.write('EMPTY ARRAY')
+
+    def JSON_BEHAVIOR_EMPTY_OBJECT(self, node, output):
+        output.write('EMPTY OBJECT')
+
+    def JSON_BEHAVIOR_DEFAULT(self, node, output):
+        output.write('DEFAULT ')
+        output.print_node(node.expr)
+
+
+json_behavior_type_printer = JsonBehaviorTypePrinter()
+
+
+@node_printer(ast.JsonBehavior)
+def json_behavior(node, output):
+    json_behavior_type_printer(node.btype, node, output)
+
+
 class JsonEncodingPrinter(IntEnumPrinter):
     enum = enums.JsonEncoding
 
@@ -1028,6 +1055,61 @@ def json_format(node, output):
     if node.encoding != enums.JsonEncoding.JS_ENC_DEFAULT:
         output.swrite('ENCODING ')
         json_encoding_printer(node.encoding, node, output)
+
+
+class JsonExprOpPrinter(IntEnumPrinter):
+    enum = enums.JsonExprOp
+
+    def JSON_EXISTS_OP(self, node, output):
+        output.write('JSON_EXISTS')
+
+    def JSON_QUERY_OP(self, node, output):
+        output.write('JSON_QUERY')
+
+    def JSON_VALUE_OP(self, node, output):
+        output.write('JSON_VALUE')
+
+    def JSON_TABLE_OP(self, node, output):
+        output.write('JSON_TABLE')
+
+
+json_expr_op_printer = JsonExprOpPrinter()
+
+
+@node_printer(ast.JsonFuncExpr)
+def json_func_expr(node, output):
+    json_expr_op_printer(node.op, node, output)
+    with output.expression(True):
+        with output.push_indent():
+            output.print_node(node.context_item)
+            output.write(', ')
+            output.print_node(node.pathspec)
+
+            if node.passing:
+                output.newline()
+                output.write('PASSING ')
+                output.print_list(node.passing)
+
+            if node.output:
+                output.print_node(node.output)
+
+            jw = enums.JsonWrapper
+            if node.wrapper == jw.JSW_NONE:
+                output.write(' WITHOUT WRAPPER')
+            elif node.wrapper == jw.JSW_CONDITIONAL:
+                output.write(' WITH CONDITIONAL WRAPPER')
+            elif node.wrapper == jw.JSW_UNCONDITIONAL:
+                output.write(' WITH UNCONDITIONAL WRAPPER')
+
+            json_quotes_printer(node.quotes, node, output)
+            if node.on_empty:
+                output.write(' ')
+                output.print_node(node.on_empty)
+                output.write(' ON EMPTY')
+            if node.on_error:
+                output.write(' ')
+                output.print_node(node.on_error)
+                output.write(' ON ERROR')
 
 
 @node_printer(ast.JsonIsPredicate)
@@ -1087,9 +1169,131 @@ def json_output(node, output):
         output.print_node(node.returning)
 
 
+@node_printer(ast.JsonParseExpr)
+def json_parse_expr(node, output):
+    output.write('json')
+    with output.expression(True):
+        output.print_node(node.expr)
+        if node.unique_keys:
+            output.write('WITH UNIQUE KEYS')
+
+
 @node_printer(ast.JsonReturning)
 def json_returning(node, output):
     output.print_node(node.format)
+
+
+@node_printer(ast.JsonScalarExpr)
+def json_scalar_expr(node, output):
+    output.write('json_scalar')
+    with output.expression(True):
+        output.print_node(node.expr)
+
+
+@node_printer(ast.JsonSerializeExpr)
+def json_serialize_expr(node, output):
+    output.write('json_serialize')
+    with output.expression(True):
+        output.print_node(node.expr)
+        if node.output:
+            output.print_node(node.output)
+
+
+@node_printer(ast.JsonTable)
+def json_table(node, output):
+    output.write('json_table')
+    with output.expression(True):
+        with output.push_indent():
+            output.print_node(node.context_item)
+            output.write(', ')
+            output.print_node(node.pathspec)
+
+            if node.passing:
+                output.newline()
+                output.write('PASSING ')
+                output.print_list(node.passing)
+
+            output.newline()
+            output.write('COLUMNS ')
+            with output.expression(True):
+                output.print_list(node.columns)
+
+            if node.on_error:
+                output.newline()
+                output.print_node(node.on_error)
+                output.write(' ON ERROR')
+
+    if node.alias:
+        output.swrite('AS ')
+        output.print_node(node.alias, is_name=True)
+
+
+class JsonQuotesPrinter(IntEnumPrinter):
+    enum = enums.JsonQuotes
+
+    def JS_QUOTES_UNSPEC(self, node, output):
+        pass
+
+    def JS_QUOTES_KEEP(self, node, output):
+        output.swrite('KEEP QUOTES')
+
+    def JS_QUOTES_OMIT(self, node, output):
+        output.swrite('OMIT QUOTES')
+
+
+json_quotes_printer = JsonQuotesPrinter()
+
+
+@node_printer(ast.JsonTableColumn)
+def json_table_column(node, output):
+    jtct = enums.JsonTableColumnType
+
+    if node.coltype == jtct.JTC_NESTED:
+        output.write('NESTED PATH ')
+        output.print_node(node.pathspec)
+        output.write('COLUMNS ')
+        with output.expression(True):
+            output.print_list(node.columns)
+    else:
+        output.print_node(node.name, is_name=True)
+        if node.coltype == jtct.JTC_FOR_ORDINALITY:
+            output.write(' FOR ORDINALITY')
+        else:
+            output.print_node(node.typeName)
+            if node.coltype == jtct.JTC_EXISTS:
+                output.write(' EXISTS ')
+            if node.format:
+                output.print_node(node.format)
+            if node.pathspec:
+                output.swrite('PATH ')
+                output.print_node(node.pathspec)
+
+        jw = enums.JsonWrapper
+        if node.wrapper == jw.JSW_NONE:
+            if node.coltype in (jtct.JTC_REGULAR, jtct.JTC_FORMATTED):
+                output.write(' WITHOUT WRAPPER')
+        elif node.wrapper == jw.JSW_CONDITIONAL:
+            output.write(' WITH CONDITIONAL WRAPPER')
+        elif node.wrapper == jw.JSW_UNCONDITIONAL:
+            output.write(' WITH UNCONDITIONAL WRAPPER')
+
+        json_quotes_printer(node.quotes, node, output)
+        if node.on_empty:
+            output.write(' ')
+            output.print_node(node.on_empty)
+            output.write(' ON EMPTY')
+        if node.on_error:
+            output.write(' ')
+            output.print_node(node.on_error)
+            output.write(' ON ERROR')
+
+
+@node_printer(ast.JsonTablePathSpec)
+def json_table_path_spec(node, output):
+    output.write_quoted_string(node.string.val.sval)
+    if node.name:
+        output.write(' AS ')
+        output.print_node(node.name, is_name=True)
 
 
 @node_printer(ast.JsonValueExpr)
@@ -1144,6 +1348,22 @@ def listen_stmt(node, output):
     output.print_name(node.conditionname)
 
 
+class MergeMatchKindPrinter(IntEnumPrinter):
+    enum = enums.MergeMatchKind
+
+    def MERGE_WHEN_MATCHED(self, node, output):
+        output.write('MATCHED')
+
+    def MERGE_WHEN_NOT_MATCHED_BY_SOURCE(self, node, output):
+        output.write('NOT MATCHED BY SOURCE')
+
+    def MERGE_WHEN_NOT_MATCHED_BY_TARGET(self, node, output):
+        output.write('NOT MATCHED BY TARGET')
+
+
+merge_match_kind_printer = MergeMatchKindPrinter()
+
+
 @node_printer(ast.MergeStmt)
 def merge_stmt(node, output):
     with output.push_indent():
@@ -1169,11 +1389,9 @@ def merge_stmt(node, output):
         for when in node.mergeWhenClauses:
             output.newline()
             output.write('WHEN ')
-            if not when.matched:
-                output.write('NOT ')
-            output.write('MATCHED ')
+            merge_match_kind_printer(when.matchKind, node, output)
             if when.condition is not None:
-                output.write('AND ')
+                output.swrite('AND ')
                 output.print_node(when.condition)
             output.swrite('THEN')
             if when.commandType in (enums.CmdType.CMD_NOTHING, enums.CmdType.CMD_DELETE):
@@ -1182,8 +1400,27 @@ def merge_stmt(node, output):
                 output.newline()
             output.print_node(when)
 
+        if node.returningList:
+            output.newline()
+            output.write('RETURNING ')
+            first = True
+            for elem in node.returningList:
+                if first:
+                    first = False
+                else:
+                    output.write(', ')
+                output.print_node(elem.val)
+                if elem.name:
+                    output.write(' AS ')
+                    output.print_name(elem.name)
+
         if node.withClause is not None:
             output.dedent()
+
+
+@node_printer(ast.MergeSupportFunc)
+def merge_support_func(node, output):
+    output.write('merge_action()')
 
 
 @node_printer(ast.MergeWhenClause)
