@@ -868,7 +868,9 @@ def workhorse(args):
             first = True
             for name in defs:
                 fields = defs[name]['fields']
-                if name not in ('Const', 'NextValueExpr'):
+                # These seem to be internal nodes, used in the *evaluation* of concrete ones
+                if name not in {'Const', 'JsonTablePath', 'JsonTablePathScan', 'JsonTablePlan',
+                                'JsonTableSiblingJoin', 'NextValueExpr'}:
                     if name != 'Expr':
                         # Omit the Expr node, because it is hand written in the
                         # ast.py header above: also, it is an abstract class,
@@ -978,7 +980,7 @@ def _fixup_attribute_types_in_slots():
                         return set(value)
                     else:
                         return value
-            elif ctype == 'ValUnion':
+            elif ctype in ('JsonTablePlan', 'ValUnion'):
                 ptype = Node
             else:
                 from pglast import enums
