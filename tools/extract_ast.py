@@ -659,7 +659,7 @@ def emit_node_def(name, fields, enums, url, output, doc):
 
 
 class {name}({superclass}):
-    __slots__ = {{{', '.join(repr(a)+': '+repr(t) for a, t in real_attrs)}}}  # noqa: E501
+    __slots__ = {{{', '.join(repr(a) + ': ' + repr(t) for a, t in real_attrs)}}}  # noqa: E501
 
 ''')
 
