@@ -664,8 +664,9 @@ class {name}({superclass}):
 ''')
 
     if attrs_to_ignore_in_comparison:
+        atinc = f'{{{", ".join(repr(a) for a in sorted(attrs_to_ignore_in_comparison))}}}'
         output.write(f'''\
-    _ATTRS_TO_IGNORE_IN_COMPARISON = {superclass}._ATTRS_TO_IGNORE_IN_COMPARISON | {repr(attrs_to_ignore_in_comparison)}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = {superclass}._ATTRS_TO_IGNORE_IN_COMPARISON | {atinc}
 
 ''')
     if real_attrs:
