@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from parsenodes.h @ 16-latest-0-g680f5ee
+# :Project:   pglast — DO NOT EDIT: automatically extracted from parsenodes.h @ 17-latest-dev-0-gf4a36d5
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © 2017-2024 Lele Gaifax
@@ -31,10 +31,12 @@ class A_Expr_Kind(IntEnum):
     AEXPR_BETWEEN_SYM = auto()
     AEXPR_NOT_BETWEEN_SYM = auto()
 
+
 class AlterPublicationAction(IntEnum):
     AP_AddObjects = 0
     AP_DropObjects = auto()
     AP_SetObjects = auto()
+
 
 class AlterSubscriptionType(IntEnum):
     ALTER_SUBSCRIPTION_OPTIONS = 0
@@ -46,12 +48,14 @@ class AlterSubscriptionType(IntEnum):
     ALTER_SUBSCRIPTION_ENABLED = auto()
     ALTER_SUBSCRIPTION_SKIP = auto()
 
+
 class AlterTSConfigType(IntEnum):
     ALTER_TSCONFIG_ADD_MAPPING = 0
     ALTER_TSCONFIG_ALTER_MAPPING_FOR_TOKEN = auto()
     ALTER_TSCONFIG_REPLACE_DICT = auto()
     ALTER_TSCONFIG_REPLACE_DICT_FOR_TOKEN = auto()
     ALTER_TSCONFIG_DROP_MAPPING = auto()
+
 
 class AlterTableType(IntEnum):
     AT_AddColumn = 0
@@ -60,6 +64,7 @@ class AlterTableType(IntEnum):
     AT_CookedColumnDefault = auto()
     AT_DropNotNull = auto()
     AT_SetNotNull = auto()
+    AT_SetExpression = auto()
     AT_DropExpression = auto()
     AT_CheckNotNull = auto()
     AT_SetStatistics = auto()
@@ -121,10 +126,12 @@ class AlterTableType(IntEnum):
     AT_DropIdentity = auto()
     AT_ReAddStatistics = auto()
 
+
 class CTEMaterialize(IntEnum):
     CTEMaterializeDefault = 0
     CTEMaterializeAlways = auto()
     CTEMaterializeNever = auto()
+
 
 class ConstrType(IntEnum):
     CONSTR_NULL = 0
@@ -142,11 +149,13 @@ class ConstrType(IntEnum):
     CONSTR_ATTR_DEFERRED = auto()
     CONSTR_ATTR_IMMEDIATE = auto()
 
+
 class DefElemAction(IntEnum):
     DEFELEM_UNSPEC = 0
     DEFELEM_SET = auto()
     DEFELEM_ADD = auto()
     DEFELEM_DROP = auto()
+
 
 class DiscardMode(IntEnum):
     DISCARD_ALL = 0
@@ -154,15 +163,18 @@ class DiscardMode(IntEnum):
     DISCARD_SEQUENCES = auto()
     DISCARD_TEMP = auto()
 
+
 class DropBehavior(IntEnum):
     DROP_RESTRICT = 0
     DROP_CASCADE = auto()
+
 
 class FetchDirection(IntEnum):
     FETCH_FORWARD = 0
     FETCH_BACKWARD = auto()
     FETCH_ABSOLUTE = auto()
     FETCH_RELATIVE = auto()
+
 
 class FunctionParameterMode(StrEnum):
     FUNC_PARAM_IN = 'i'
@@ -172,10 +184,12 @@ class FunctionParameterMode(StrEnum):
     FUNC_PARAM_TABLE = 't'
     FUNC_PARAM_DEFAULT = 'd'
 
+
 class GrantTargetType(IntEnum):
     ACL_TARGET_OBJECT = 0
     ACL_TARGET_ALL_IN_SCHEMA = auto()
     ACL_TARGET_DEFAULTS = auto()
+
 
 class GroupingSetKind(IntEnum):
     GROUPING_SET_EMPTY = 0
@@ -184,10 +198,26 @@ class GroupingSetKind(IntEnum):
     GROUPING_SET_CUBE = auto()
     GROUPING_SET_SETS = auto()
 
+
 class ImportForeignSchemaType(IntEnum):
     FDW_IMPORT_SCHEMA_ALL = 0
     FDW_IMPORT_SCHEMA_LIMIT_TO = auto()
     FDW_IMPORT_SCHEMA_EXCEPT = auto()
+
+
+class JsonQuotes(IntEnum):
+    JS_QUOTES_UNSPEC = 0
+    JS_QUOTES_KEEP = auto()
+    JS_QUOTES_OMIT = auto()
+
+
+class JsonTableColumnType(IntEnum):
+    JTC_FOR_ORDINALITY = 0
+    JTC_REGULAR = auto()
+    JTC_EXISTS = auto()
+    JTC_FORMATTED = auto()
+    JTC_NESTED = auto()
+
 
 class ObjectType(IntEnum):
     OBJECT_ACCESS_METHOD = 0
@@ -243,20 +273,18 @@ class ObjectType(IntEnum):
     OBJECT_USER_MAPPING = auto()
     OBJECT_VIEW = auto()
 
-class OverridingKind(IntEnum):
-    OVERRIDING_NOT_SET = 0
-    OVERRIDING_USER_VALUE = auto()
-    OVERRIDING_SYSTEM_VALUE = auto()
 
 class PartitionRangeDatumKind(IntEnum):
     PARTITION_RANGE_DATUM_MINVALUE = -1
     PARTITION_RANGE_DATUM_VALUE = 0
     PARTITION_RANGE_DATUM_MAXVALUE = 1
 
+
 class PartitionStrategy(StrEnum):
     PARTITION_STRATEGY_LIST = 'l'
     PARTITION_STRATEGY_RANGE = 'r'
     PARTITION_STRATEGY_HASH = 'h'
+
 
 class PublicationObjSpecType(IntEnum):
     PUBLICATIONOBJ_TABLE = 0
@@ -264,12 +292,14 @@ class PublicationObjSpecType(IntEnum):
     PUBLICATIONOBJ_TABLES_IN_CUR_SCHEMA = auto()
     PUBLICATIONOBJ_CONTINUATION = auto()
 
+
 class QuerySource(IntEnum):
     QSRC_ORIGINAL = 0
     QSRC_PARSER = auto()
     QSRC_INSTEAD_RULE = auto()
     QSRC_QUAL_INSTEAD_RULE = auto()
     QSRC_NON_INSTEAD_RULE = auto()
+
 
 class RTEKind(IntEnum):
     RTE_RELATION = 0
@@ -282,12 +312,14 @@ class RTEKind(IntEnum):
     RTE_NAMEDTUPLESTORE = auto()
     RTE_RESULT = auto()
 
+
 class ReindexObjectType(IntEnum):
     REINDEX_OBJECT_INDEX = 0
     REINDEX_OBJECT_TABLE = auto()
     REINDEX_OBJECT_SCHEMA = auto()
     REINDEX_OBJECT_SYSTEM = auto()
     REINDEX_OBJECT_DATABASE = auto()
+
 
 class RoleSpecType(IntEnum):
     ROLESPEC_CSTRING = 0
@@ -296,10 +328,12 @@ class RoleSpecType(IntEnum):
     ROLESPEC_SESSION_USER = auto()
     ROLESPEC_PUBLIC = auto()
 
+
 class RoleStmtType(IntEnum):
     ROLESTMT_ROLE = 0
     ROLESTMT_USER = auto()
     ROLESTMT_GROUP = auto()
+
 
 class SetOperation(IntEnum):
     SETOP_NONE = 0
@@ -307,10 +341,12 @@ class SetOperation(IntEnum):
     SETOP_INTERSECT = auto()
     SETOP_EXCEPT = auto()
 
+
 class SetQuantifier(IntEnum):
     SET_QUANTIFIER_DEFAULT = 0
     SET_QUANTIFIER_ALL = auto()
     SET_QUANTIFIER_DISTINCT = auto()
+
 
 class SortByDir(IntEnum):
     SORTBY_DEFAULT = 0
@@ -318,10 +354,12 @@ class SortByDir(IntEnum):
     SORTBY_DESC = auto()
     SORTBY_USING = auto()
 
+
 class SortByNulls(IntEnum):
     SORTBY_NULLS_DEFAULT = 0
     SORTBY_NULLS_FIRST = auto()
     SORTBY_NULLS_LAST = auto()
+
 
 class TableLikeOption(IntFlag):
     CREATE_TABLE_LIKE_COMMENTS = 1 << 0
@@ -335,6 +373,7 @@ class TableLikeOption(IntFlag):
     CREATE_TABLE_LIKE_STORAGE = 1 << 8
     CREATE_TABLE_LIKE_ALL = 0x7FFFFFFF
 
+
 class TransactionStmtKind(IntEnum):
     TRANS_STMT_BEGIN = 0
     TRANS_STMT_START = auto()
@@ -347,6 +386,7 @@ class TransactionStmtKind(IntEnum):
     TRANS_STMT_COMMIT_PREPARED = auto()
     TRANS_STMT_ROLLBACK_PREPARED = auto()
 
+
 class VariableSetKind(IntEnum):
     VAR_SET_VALUE = 0
     VAR_SET_DEFAULT = auto()
@@ -355,10 +395,12 @@ class VariableSetKind(IntEnum):
     VAR_RESET = auto()
     VAR_RESET_ALL = auto()
 
+
 class ViewCheckOption(IntEnum):
     NO_CHECK_OPTION = 0
     LOCAL_CHECK_OPTION = auto()
     CASCADED_CHECK_OPTION = auto()
+
 
 class WCOKind(IntEnum):
     WCO_VIEW_CHECK = 0
@@ -399,7 +441,9 @@ ACL_SET = 1<<12
 
 ACL_ALTER_SYSTEM = 1<<13
 
-N_ACL_RIGHTS = 14
+ACL_MAINTAIN = 1<<14
+
+N_ACL_RIGHTS = 15
 
 ACL_NO_RIGHTS = 0
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from pg_attribute.h @ 16-latest-0-g680f5ee
+# :Project:   pglast — DO NOT EDIT: automatically extracted from pg_attribute.h @ 17-latest-dev-0-gf4a36d5
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © 2017-2024 Lele Gaifax
@@ -13,7 +13,6 @@ except ImportError:  # pragma: no cover
     # Python < 3.10
     class StrEnum(str, Enum):
         pass
-
 
 
 # #define-ed constants

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from struct_defs.json @ 16-latest-0-g680f5ee
+# :Project:   pglast — DO NOT EDIT: automatically extracted from struct_defs.json @ 17-latest-dev-0-gf4a36d5
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © 2021-2024 Lele Gaifax
@@ -109,7 +109,8 @@ class Node:
             attrs = ''
         return '<' + self.__class__.__name__ + attrs + '>'
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = {'location', 'stmt_len', 'stmt_location'}
+    # Set of attributes that are semantically meaningless, mostly statement offset and length
+    _ATTRS_TO_IGNORE_IN_COMPARISON = {'stmt_len'}
 
     def __eq__(self, other):
         '''
@@ -123,8 +124,7 @@ class Node:
         if not isinstance(other, type(self)):
             return False
         for a in self:
-            if ((a not in self._ATTRS_TO_IGNORE_IN_COMPARISON
-                 and getattr(self, a) != getattr(other, a))):
+            if a not in self._ATTRS_TO_IGNORE_IN_COMPARISON and getattr(self, a) != getattr(other, a):
                 return False
         return True
 
@@ -212,9 +212,10 @@ class Expr(Node):
     __slots__ = ()
 
 
-
 class A_ArrayExpr(Node):
-    __slots__ = {'elements': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'elements': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, elements=None, location=None):  # pragma: no cover  # noqa: E501
         if ((elements is not None
@@ -260,7 +261,9 @@ class A_Const(Node):
 
 
 class A_Expr(Node):
-    __slots__ = {'kind': 'A_Expr_Kind', 'name': 'List*', 'lexpr': 'Node*', 'rexpr': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'kind': 'A_Expr_Kind', 'name': 'List*', 'lexpr': 'Node*', 'rexpr': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, kind=None, name=None, lexpr=None, rexpr=None, location=None):  # pragma: no cover  # noqa: E501
         if ((kind is not None
@@ -327,7 +330,9 @@ class AccessPriv(Node):
 
 
 class Aggref(Expr):
-    __slots__ = {'aggargtypes': 'List*', 'aggdirectargs': 'List*', 'args': 'List*', 'aggorder': 'List*', 'aggdistinct': 'List*', 'aggfilter': 'Expr*', 'aggstar': 'bool', 'aggvariadic': 'bool', 'aggkind': 'char', 'agglevelsup': 'Index', 'aggsplit': 'AggSplit', 'aggno': 'int', 'aggtransno': 'int', 'location': 'int'}  # noqa: E501
+    __slots__ = {'aggargtypes': 'List*', 'aggdirectargs': 'List*', 'args': 'List*', 'aggorder': 'List*', 'aggdistinct': 'List*', 'aggfilter': 'Expr*', 'aggstar': 'bool', 'aggvariadic': 'bool', 'aggkind': 'char', 'agglevelsup': 'Index', 'aggsplit': 'AggSplit', 'aggno': 'int', 'aggtransno': 'int', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, aggargtypes=None, aggdirectargs=None, args=None, aggorder=None, aggdistinct=None, aggfilter=None, aggstar=None, aggvariadic=None, aggkind=None, agglevelsup=None, aggsplit=None, aggno=None, aggtransno=None, location=None):  # pragma: no cover  # noqa: E501
         if ((aggargtypes is not None
@@ -719,7 +724,7 @@ class AlterSeqStmt(Node):
 
 
 class AlterStatsStmt(Node):
-    __slots__ = {'defnames': 'List*', 'stxstattarget': 'int', 'missing_ok': 'bool'}  # noqa: E501
+    __slots__ = {'defnames': 'List*', 'stxstattarget': 'Node*', 'missing_ok': 'bool'}  # noqa: E501
 
     def __init__(self, defnames=None, stxstattarget=None, missing_ok=None):  # pragma: no cover  # noqa: E501
         if ((defnames is not None
@@ -905,9 +910,9 @@ class AlternativeSubPlan(Expr):
 
 
 class ArrayCoerceExpr(Expr):
-    __slots__ = {'arg': 'Expr*', 'elemexpr': 'Expr*', 'resulttypmod': 'int32', 'coerceformat': 'CoercionForm', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'elemexpr': 'Expr*', 'resulttypmod': 'int32', 'coerceformat': 'CoercionForm', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'coerceformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'coerceformat', 'location'}
 
     def __init__(self, arg=None, elemexpr=None, resulttypmod=None, coerceformat=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -924,7 +929,9 @@ class ArrayCoerceExpr(Expr):
 
 
 class ArrayExpr(Expr):
-    __slots__ = {'elements': 'List*', 'multidims': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'elements': 'List*', 'multidims': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, elements=None, multidims=None, location=None):  # pragma: no cover  # noqa: E501
         if ((elements is not None
@@ -951,7 +958,9 @@ class BitString(Node):
 
 
 class BoolExpr(Expr):
-    __slots__ = {'boolop': 'BoolExprType', 'args': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'boolop': 'BoolExprType', 'args': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, boolop=None, args=None, location=None):  # pragma: no cover  # noqa: E501
         if ((boolop is not None
@@ -978,7 +987,9 @@ class Boolean(Node):
 
 
 class BooleanTest(Expr):
-    __slots__ = {'arg': 'Expr*', 'booltesttype': 'BoolTestType', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'booltesttype': 'BoolTestType', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, booltesttype=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -993,7 +1004,9 @@ class BooleanTest(Expr):
 
 
 class CTECycleClause(Node):
-    __slots__ = {'cycle_col_list': 'List*', 'cycle_mark_column': 'char*', 'cycle_mark_value': 'Node*', 'cycle_mark_default': 'Node*', 'cycle_path_column': 'char*', 'location': 'int', 'cycle_mark_typmod': 'int'}  # noqa: E501
+    __slots__ = {'cycle_col_list': 'List*', 'cycle_mark_column': 'char*', 'cycle_mark_value': 'Node*', 'cycle_mark_default': 'Node*', 'cycle_path_column': 'char*', 'location': 'ParseLoc', 'cycle_mark_typmod': 'int'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, cycle_col_list=None, cycle_mark_column=None, cycle_mark_value=None, cycle_mark_default=None, cycle_path_column=None, location=None, cycle_mark_typmod=None):  # pragma: no cover  # noqa: E501
         if ((cycle_col_list is not None
@@ -1012,7 +1025,9 @@ class CTECycleClause(Node):
 
 
 class CTESearchClause(Node):
-    __slots__ = {'search_col_list': 'List*', 'search_breadth_first': 'bool', 'search_seq_column': 'char*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'search_col_list': 'List*', 'search_breadth_first': 'bool', 'search_seq_column': 'char*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, search_col_list=None, search_breadth_first=None, search_seq_column=None, location=None):  # pragma: no cover  # noqa: E501
         if ((search_col_list is not None
@@ -1055,7 +1070,9 @@ class CallStmt(Node):
 
 
 class CaseExpr(Expr):
-    __slots__ = {'arg': 'Expr*', 'args': 'List*', 'defresult': 'Expr*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'args': 'List*', 'defresult': 'Expr*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, args=None, defresult=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -1083,7 +1100,9 @@ class CaseTestExpr(Expr):
 
 
 class CaseWhen(Expr):
-    __slots__ = {'expr': 'Expr*', 'result': 'Expr*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'expr': 'Expr*', 'result': 'Expr*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, expr=None, result=None, location=None):  # pragma: no cover  # noqa: E501
         if ((expr is not None
@@ -1132,7 +1151,9 @@ class ClusterStmt(Node):
 
 
 class CoalesceExpr(Expr):
-    __slots__ = {'args': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'args': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, args=None, location=None):  # pragma: no cover  # noqa: E501
         if ((args is not None
@@ -1146,9 +1167,9 @@ class CoalesceExpr(Expr):
 
 
 class CoerceToDomain(Expr):
-    __slots__ = {'arg': 'Expr*', 'resulttypmod': 'int32', 'coercionformat': 'CoercionForm', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'resulttypmod': 'int32', 'coercionformat': 'CoercionForm', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'coercionformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'coercionformat', 'location'}
 
     def __init__(self, arg=None, resulttypmod=None, coercionformat=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -1164,7 +1185,9 @@ class CoerceToDomain(Expr):
 
 
 class CoerceToDomainValue(Expr):
-    __slots__ = {'typeMod': 'int32', 'location': 'int'}  # noqa: E501
+    __slots__ = {'typeMod': 'int32', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, typeMod=None, location=None):  # pragma: no cover  # noqa: E501
         if ((typeMod is not None
@@ -1178,9 +1201,9 @@ class CoerceToDomainValue(Expr):
 
 
 class CoerceViaIO(Expr):
-    __slots__ = {'arg': 'Expr*', 'coerceformat': 'CoercionForm', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'coerceformat': 'CoercionForm', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'coerceformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'coerceformat', 'location'}
 
     def __init__(self, arg=None, coerceformat=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -1195,7 +1218,9 @@ class CoerceViaIO(Expr):
 
 
 class CollateClause(Node):
-    __slots__ = {'arg': 'Node*', 'collname': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Node*', 'collname': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, collname=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -1210,7 +1235,9 @@ class CollateClause(Node):
 
 
 class CollateExpr(Expr):
-    __slots__ = {'arg': 'Expr*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -1224,7 +1251,9 @@ class CollateExpr(Expr):
 
 
 class ColumnDef(Node):
-    __slots__ = {'colname': 'char*', 'typeName': 'TypeName*', 'compression': 'char*', 'inhcount': 'int', 'is_local': 'bool', 'is_not_null': 'bool', 'is_from_type': 'bool', 'storage': 'char', 'storage_name': 'char*', 'raw_default': 'Node*', 'cooked_default': 'Node*', 'identity': 'char', 'identitySequence': 'RangeVar*', 'generated': 'char', 'collClause': 'CollateClause*', 'constraints': 'List*', 'fdwoptions': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'colname': 'char*', 'typeName': 'TypeName*', 'compression': 'char*', 'inhcount': 'int', 'is_local': 'bool', 'is_not_null': 'bool', 'is_from_type': 'bool', 'storage': 'char', 'storage_name': 'char*', 'raw_default': 'Node*', 'cooked_default': 'Node*', 'identity': 'char', 'identitySequence': 'RangeVar*', 'generated': 'char', 'collClause': 'CollateClause*', 'constraints': 'List*', 'fdwoptions': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, colname=None, typeName=None, compression=None, inhcount=None, is_local=None, is_not_null=None, is_from_type=None, storage=None, storage_name=None, raw_default=None, cooked_default=None, identity=None, identitySequence=None, generated=None, collClause=None, constraints=None, fdwoptions=None, location=None):  # pragma: no cover  # noqa: E501
         if ((colname is not None
@@ -1254,7 +1283,9 @@ class ColumnDef(Node):
 
 
 class ColumnRef(Node):
-    __slots__ = {'fields': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'fields': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, fields=None, location=None):  # pragma: no cover  # noqa: E501
         if ((fields is not None
@@ -1283,7 +1314,9 @@ class CommentStmt(Node):
 
 
 class CommonTableExpr(Node):
-    __slots__ = {'ctename': 'char*', 'aliascolnames': 'List*', 'ctematerialized': 'CTEMaterialize', 'ctequery': 'Node*', 'search_clause': 'CTESearchClause*', 'cycle_clause': 'CTECycleClause*', 'location': 'int', 'cterecursive': 'bool', 'cterefcount': 'int', 'ctecolnames': 'List*', 'ctecoltypes': 'List*', 'ctecoltypmods': 'List*', 'ctecolcollations': 'List*'}  # noqa: E501
+    __slots__ = {'ctename': 'char*', 'aliascolnames': 'List*', 'ctematerialized': 'CTEMaterialize', 'ctequery': 'Node*', 'search_clause': 'CTESearchClause*', 'cycle_clause': 'CTECycleClause*', 'location': 'ParseLoc', 'cterecursive': 'bool', 'cterefcount': 'int', 'ctecolnames': 'List*', 'ctecoltypes': 'List*', 'ctecoltypmods': 'List*', 'ctecolcollations': 'List*'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, ctename=None, aliascolnames=None, ctematerialized=None, ctequery=None, search_clause=None, cycle_clause=None, location=None, cterecursive=None, cterefcount=None, ctecolnames=None, ctecoltypes=None, ctecoltypmods=None, ctecolcollations=None):  # pragma: no cover  # noqa: E501
         if ((ctename is not None
@@ -1322,11 +1355,13 @@ class CompositeTypeStmt(Node):
 
 
 class Constraint(Node):
-    __slots__ = {'contype': 'ConstrType', 'conname': 'char*', 'deferrable': 'bool', 'initdeferred': 'bool', 'location': 'int', 'is_no_inherit': 'bool', 'raw_expr': 'Node*', 'cooked_expr': 'char*', 'generated_when': 'char', 'nulls_not_distinct': 'bool', 'keys': 'List*', 'including': 'List*', 'exclusions': 'List*', 'options': 'List*', 'indexname': 'char*', 'indexspace': 'char*', 'reset_default_tblspc': 'bool', 'access_method': 'char*', 'where_clause': 'Node*', 'pktable': 'RangeVar*', 'fk_attrs': 'List*', 'pk_attrs': 'List*', 'fk_matchtype': 'char', 'fk_upd_action': 'char', 'fk_del_action': 'char', 'fk_del_set_cols': 'List*', 'old_conpfeqop': 'List*', 'skip_validation': 'bool', 'initially_valid': 'bool'}  # noqa: E501
+    __slots__ = {'contype': 'ConstrType', 'conname': 'char*', 'deferrable': 'bool', 'initdeferred': 'bool', 'skip_validation': 'bool', 'initially_valid': 'bool', 'is_no_inherit': 'bool', 'raw_expr': 'Node*', 'cooked_expr': 'char*', 'generated_when': 'char', 'inhcount': 'int', 'nulls_not_distinct': 'bool', 'keys': 'List*', 'including': 'List*', 'exclusions': 'List*', 'options': 'List*', 'indexname': 'char*', 'indexspace': 'char*', 'reset_default_tblspc': 'bool', 'access_method': 'char*', 'where_clause': 'Node*', 'pktable': 'RangeVar*', 'fk_attrs': 'List*', 'pk_attrs': 'List*', 'fk_matchtype': 'char', 'fk_upd_action': 'char', 'fk_del_action': 'char', 'fk_del_set_cols': 'List*', 'old_conpfeqop': 'List*', 'location': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, contype=None, conname=None, deferrable=None, initdeferred=None, location=None, is_no_inherit=None, raw_expr=None, cooked_expr=None, generated_when=None, nulls_not_distinct=None, keys=None, including=None, exclusions=None, options=None, indexname=None, indexspace=None, reset_default_tblspc=None, access_method=None, where_clause=None, pktable=None, fk_attrs=None, pk_attrs=None, fk_matchtype=None, fk_upd_action=None, fk_del_action=None, fk_del_set_cols=None, old_conpfeqop=None, skip_validation=None, initially_valid=None):  # pragma: no cover  # noqa: E501
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, contype=None, conname=None, deferrable=None, initdeferred=None, skip_validation=None, initially_valid=None, is_no_inherit=None, raw_expr=None, cooked_expr=None, generated_when=None, inhcount=None, nulls_not_distinct=None, keys=None, including=None, exclusions=None, options=None, indexname=None, indexspace=None, reset_default_tblspc=None, access_method=None, where_clause=None, pktable=None, fk_attrs=None, pk_attrs=None, fk_matchtype=None, fk_upd_action=None, fk_del_action=None, fk_del_set_cols=None, old_conpfeqop=None, location=None):  # pragma: no cover  # noqa: E501
         if ((contype is not None
-             and conname is deferrable is initdeferred is location is is_no_inherit is raw_expr is cooked_expr is generated_when is nulls_not_distinct is keys is including is exclusions is options is indexname is indexspace is reset_default_tblspc is access_method is where_clause is pktable is fk_attrs is pk_attrs is fk_matchtype is fk_upd_action is fk_del_action is fk_del_set_cols is old_conpfeqop is skip_validation is initially_valid is None  # noqa: E501
+             and conname is deferrable is initdeferred is skip_validation is initially_valid is is_no_inherit is raw_expr is cooked_expr is generated_when is inhcount is nulls_not_distinct is keys is including is exclusions is options is indexname is indexspace is reset_default_tblspc is access_method is where_clause is pktable is fk_attrs is pk_attrs is fk_matchtype is fk_upd_action is fk_del_action is fk_del_set_cols is old_conpfeqop is location is None  # noqa: E501
              and isinstance(contype, dict)
              and '@' in contype)):
             super().__init__(contype)
@@ -1335,11 +1370,13 @@ class Constraint(Node):
             self.conname = conname
             self.deferrable = deferrable
             self.initdeferred = initdeferred
-            self.location = location
+            self.skip_validation = skip_validation
+            self.initially_valid = initially_valid
             self.is_no_inherit = is_no_inherit
             self.raw_expr = raw_expr
             self.cooked_expr = cooked_expr
             self.generated_when = generated_when
+            self.inhcount = inhcount
             self.nulls_not_distinct = nulls_not_distinct
             self.keys = keys
             self.including = including
@@ -1358,8 +1395,7 @@ class Constraint(Node):
             self.fk_del_action = fk_del_action
             self.fk_del_set_cols = fk_del_set_cols
             self.old_conpfeqop = old_conpfeqop
-            self.skip_validation = skip_validation
-            self.initially_valid = initially_valid
+            self.location = location
 
 
 class ConstraintsSetStmt(Node):
@@ -1377,9 +1413,9 @@ class ConstraintsSetStmt(Node):
 
 
 class ConvertRowtypeExpr(Expr):
-    __slots__ = {'arg': 'Expr*', 'convertformat': 'CoercionForm', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'convertformat': 'CoercionForm', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'convertformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'convertformat', 'location'}
 
     def __init__(self, arg=None, convertformat=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -1936,15 +1972,20 @@ class CurrentOfExpr(Expr):
 
 
 class DeallocateStmt(Node):
-    __slots__ = {'name': 'char*'}  # noqa: E501
+    __slots__ = {'name': 'char*', 'isall': 'bool', 'location': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, name=None):  # pragma: no cover  # noqa: E501
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, name=None, isall=None, location=None):  # pragma: no cover  # noqa: E501
         if ((name is not None
+             and isall is location is None  # noqa: E501
              and isinstance(name, dict)
              and '@' in name)):
             super().__init__(name)
         else:
             self.name = name
+            self.isall = isall
+            self.location = location
 
 
 class DeclareCursorStmt(Node):
@@ -1963,7 +2004,9 @@ class DeclareCursorStmt(Node):
 
 
 class DefElem(Node):
-    __slots__ = {'defnamespace': 'char*', 'defname': 'char*', 'arg': 'Node*', 'defaction': 'DefElemAction', 'location': 'int'}  # noqa: E501
+    __slots__ = {'defnamespace': 'char*', 'defname': 'char*', 'arg': 'Node*', 'defaction': 'DefElemAction', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, defnamespace=None, defname=None, arg=None, defaction=None, location=None):  # pragma: no cover  # noqa: E501
         if ((defnamespace is not None
@@ -2244,9 +2287,9 @@ class FromExpr(Node):
 
 
 class FuncCall(Node):
-    __slots__ = {'funcname': 'List*', 'args': 'List*', 'agg_order': 'List*', 'agg_filter': 'Node*', 'over': 'WindowDef*', 'agg_within_group': 'bool', 'agg_star': 'bool', 'agg_distinct': 'bool', 'func_variadic': 'bool', 'funcformat': 'CoercionForm', 'location': 'int'}  # noqa: E501
+    __slots__ = {'funcname': 'List*', 'args': 'List*', 'agg_order': 'List*', 'agg_filter': 'Node*', 'over': 'WindowDef*', 'agg_within_group': 'bool', 'agg_star': 'bool', 'agg_distinct': 'bool', 'func_variadic': 'bool', 'funcformat': 'CoercionForm', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'funcformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'funcformat', 'location'}
 
     def __init__(self, funcname=None, args=None, agg_order=None, agg_filter=None, over=None, agg_within_group=None, agg_star=None, agg_distinct=None, func_variadic=None, funcformat=None, location=None):  # pragma: no cover  # noqa: E501
         if ((funcname is not None
@@ -2269,9 +2312,9 @@ class FuncCall(Node):
 
 
 class FuncExpr(Expr):
-    __slots__ = {'funcretset': 'bool', 'funcvariadic': 'bool', 'funcformat': 'CoercionForm', 'args': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'funcretset': 'bool', 'funcvariadic': 'bool', 'funcformat': 'CoercionForm', 'args': 'List*', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'funcformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'funcformat', 'location'}
 
     def __init__(self, funcretset=None, funcvariadic=None, funcformat=None, args=None, location=None):  # pragma: no cover  # noqa: E501
         if ((funcretset is not None
@@ -2343,7 +2386,9 @@ class GrantStmt(Node):
 
 
 class GroupingFunc(Expr):
-    __slots__ = {'args': 'List*', 'refs': 'List*', 'agglevelsup': 'Index', 'location': 'int'}  # noqa: E501
+    __slots__ = {'args': 'List*', 'refs': 'List*', 'agglevelsup': 'Index', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, args=None, refs=None, agglevelsup=None, location=None):  # pragma: no cover  # noqa: E501
         if ((args is not None
@@ -2359,7 +2404,9 @@ class GroupingFunc(Expr):
 
 
 class GroupingSet(Node):
-    __slots__ = {'kind': 'GroupingSetKind', 'content': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'kind': 'GroupingSetKind', 'content': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, kind=None, content=None, location=None):  # pragma: no cover  # noqa: E501
         if ((kind is not None
@@ -2447,7 +2494,9 @@ class IndexStmt(Node):
 
 
 class InferClause(Node):
-    __slots__ = {'indexElems': 'List*', 'whereClause': 'Node*', 'conname': 'char*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'indexElems': 'List*', 'whereClause': 'Node*', 'conname': 'char*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, indexElems=None, whereClause=None, conname=None, location=None):  # pragma: no cover  # noqa: E501
         if ((indexElems is not None
@@ -2562,7 +2611,9 @@ class JoinExpr(Node):
 
 
 class JsonAggConstructor(Node):
-    __slots__ = {'output': 'JsonOutput*', 'agg_filter': 'Node*', 'agg_order': 'List*', 'over': 'WindowDef*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'output': 'JsonOutput*', 'agg_filter': 'Node*', 'agg_order': 'List*', 'over': 'WindowDef*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, output=None, agg_filter=None, agg_order=None, over=None, location=None):  # pragma: no cover  # noqa: E501
         if ((output is not None
@@ -2576,6 +2627,20 @@ class JsonAggConstructor(Node):
             self.agg_order = agg_order
             self.over = over
             self.location = location
+
+
+class JsonArgument(Node):
+    __slots__ = {'val': 'JsonValueExpr*', 'name': 'char*'}  # noqa: E501
+
+    def __init__(self, val=None, name=None):  # pragma: no cover  # noqa: E501
+        if ((val is not None
+             and name is None  # noqa: E501
+             and isinstance(val, dict)
+             and '@' in val)):
+            super().__init__(val)
+        else:
+            self.val = val
+            self.name = name
 
 
 class JsonArrayAgg(Node):
@@ -2594,7 +2659,9 @@ class JsonArrayAgg(Node):
 
 
 class JsonArrayConstructor(Node):
-    __slots__ = {'exprs': 'List*', 'output': 'JsonOutput*', 'absent_on_null': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'exprs': 'List*', 'output': 'JsonOutput*', 'absent_on_null': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, exprs=None, output=None, absent_on_null=None, location=None):  # pragma: no cover  # noqa: E501
         if ((exprs is not None
@@ -2610,7 +2677,9 @@ class JsonArrayConstructor(Node):
 
 
 class JsonArrayQueryConstructor(Node):
-    __slots__ = {'query': 'Node*', 'output': 'JsonOutput*', 'format': 'JsonFormat*', 'absent_on_null': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'query': 'Node*', 'output': 'JsonOutput*', 'format': 'JsonFormat*', 'absent_on_null': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, query=None, output=None, format=None, absent_on_null=None, location=None):  # pragma: no cover  # noqa: E501
         if ((query is not None
@@ -2626,8 +2695,28 @@ class JsonArrayQueryConstructor(Node):
             self.location = location
 
 
+class JsonBehavior(Node):
+    __slots__ = {'btype': 'JsonBehaviorType', 'expr': 'Node*', 'coerce': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, btype=None, expr=None, coerce=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((btype is not None
+             and expr is coerce is location is None  # noqa: E501
+             and isinstance(btype, dict)
+             and '@' in btype)):
+            super().__init__(btype)
+        else:
+            self.btype = btype
+            self.expr = expr
+            self.coerce = coerce
+            self.location = location
+
+
 class JsonConstructorExpr(Expr):
-    __slots__ = {'type': 'JsonConstructorType', 'args': 'List*', 'func': 'Expr*', 'coercion': 'Expr*', 'returning': 'JsonReturning*', 'absent_on_null': 'bool', 'unique': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'type': 'JsonConstructorType', 'args': 'List*', 'func': 'Expr*', 'coercion': 'Expr*', 'returning': 'JsonReturning*', 'absent_on_null': 'bool', 'unique': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, type=None, args=None, func=None, coercion=None, returning=None, absent_on_null=None, unique=None, location=None):  # pragma: no cover  # noqa: E501
         if ((type is not None
@@ -2646,8 +2735,39 @@ class JsonConstructorExpr(Expr):
             self.location = location
 
 
+class JsonExpr(Expr):
+    __slots__ = {'op': 'JsonExprOp', 'column_name': 'char*', 'formatted_expr': 'Node*', 'format': 'JsonFormat*', 'path_spec': 'Node*', 'returning': 'JsonReturning*', 'passing_names': 'List*', 'passing_values': 'List*', 'on_empty': 'JsonBehavior*', 'on_error': 'JsonBehavior*', 'use_io_coercion': 'bool', 'use_json_coercion': 'bool', 'wrapper': 'JsonWrapper', 'omit_quotes': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, op=None, column_name=None, formatted_expr=None, format=None, path_spec=None, returning=None, passing_names=None, passing_values=None, on_empty=None, on_error=None, use_io_coercion=None, use_json_coercion=None, wrapper=None, omit_quotes=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((op is not None
+             and column_name is formatted_expr is format is path_spec is returning is passing_names is passing_values is on_empty is on_error is use_io_coercion is use_json_coercion is wrapper is omit_quotes is location is None  # noqa: E501
+             and isinstance(op, dict)
+             and '@' in op)):
+            super().__init__(op)
+        else:
+            self.op = op
+            self.column_name = column_name
+            self.formatted_expr = formatted_expr
+            self.format = format
+            self.path_spec = path_spec
+            self.returning = returning
+            self.passing_names = passing_names
+            self.passing_values = passing_values
+            self.on_empty = on_empty
+            self.on_error = on_error
+            self.use_io_coercion = use_io_coercion
+            self.use_json_coercion = use_json_coercion
+            self.wrapper = wrapper
+            self.omit_quotes = omit_quotes
+            self.location = location
+
+
 class JsonFormat(Node):
-    __slots__ = {'format_type': 'JsonFormatType', 'encoding': 'JsonEncoding', 'location': 'int'}  # noqa: E501
+    __slots__ = {'format_type': 'JsonFormatType', 'encoding': 'JsonEncoding', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, format_type=None, encoding=None, location=None):  # pragma: no cover  # noqa: E501
         if ((format_type is not None
@@ -2661,8 +2781,35 @@ class JsonFormat(Node):
             self.location = location
 
 
+class JsonFuncExpr(Node):
+    __slots__ = {'op': 'JsonExprOp', 'column_name': 'char*', 'context_item': 'JsonValueExpr*', 'pathspec': 'Node*', 'passing': 'List*', 'output': 'JsonOutput*', 'on_empty': 'JsonBehavior*', 'on_error': 'JsonBehavior*', 'wrapper': 'JsonWrapper', 'quotes': 'JsonQuotes', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, op=None, column_name=None, context_item=None, pathspec=None, passing=None, output=None, on_empty=None, on_error=None, wrapper=None, quotes=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((op is not None
+             and column_name is context_item is pathspec is passing is output is on_empty is on_error is wrapper is quotes is location is None  # noqa: E501
+             and isinstance(op, dict)
+             and '@' in op)):
+            super().__init__(op)
+        else:
+            self.op = op
+            self.column_name = column_name
+            self.context_item = context_item
+            self.pathspec = pathspec
+            self.passing = passing
+            self.output = output
+            self.on_empty = on_empty
+            self.on_error = on_error
+            self.wrapper = wrapper
+            self.quotes = quotes
+            self.location = location
+
+
 class JsonIsPredicate(Node):
-    __slots__ = {'expr': 'Node*', 'format': 'JsonFormat*', 'item_type': 'JsonValueType', 'unique_keys': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'expr': 'Node*', 'format': 'JsonFormat*', 'item_type': 'JsonValueType', 'unique_keys': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, expr=None, format=None, item_type=None, unique_keys=None, location=None):  # pragma: no cover  # noqa: E501
         if ((expr is not None
@@ -2709,7 +2856,9 @@ class JsonObjectAgg(Node):
 
 
 class JsonObjectConstructor(Node):
-    __slots__ = {'exprs': 'List*', 'output': 'JsonOutput*', 'absent_on_null': 'bool', 'unique': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'exprs': 'List*', 'output': 'JsonOutput*', 'absent_on_null': 'bool', 'unique': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, exprs=None, output=None, absent_on_null=None, unique=None, location=None):  # pragma: no cover  # noqa: E501
         if ((exprs is not None
@@ -2739,6 +2888,24 @@ class JsonOutput(Node):
             self.returning = returning
 
 
+class JsonParseExpr(Node):
+    __slots__ = {'expr': 'JsonValueExpr*', 'output': 'JsonOutput*', 'unique_keys': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, expr=None, output=None, unique_keys=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((expr is not None
+             and output is unique_keys is location is None  # noqa: E501
+             and isinstance(expr, dict)
+             and '@' in expr)):
+            super().__init__(expr)
+        else:
+            self.expr = expr
+            self.output = output
+            self.unique_keys = unique_keys
+            self.location = location
+
+
 class JsonReturning(Node):
     __slots__ = {'format': 'JsonFormat*', 'typmod': 'int32'}  # noqa: E501
 
@@ -2751,6 +2918,105 @@ class JsonReturning(Node):
         else:
             self.format = format
             self.typmod = typmod
+
+
+class JsonScalarExpr(Node):
+    __slots__ = {'expr': 'Expr*', 'output': 'JsonOutput*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, expr=None, output=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((expr is not None
+             and output is location is None  # noqa: E501
+             and isinstance(expr, dict)
+             and '@' in expr)):
+            super().__init__(expr)
+        else:
+            self.expr = expr
+            self.output = output
+            self.location = location
+
+
+class JsonSerializeExpr(Node):
+    __slots__ = {'expr': 'JsonValueExpr*', 'output': 'JsonOutput*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, expr=None, output=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((expr is not None
+             and output is location is None  # noqa: E501
+             and isinstance(expr, dict)
+             and '@' in expr)):
+            super().__init__(expr)
+        else:
+            self.expr = expr
+            self.output = output
+            self.location = location
+
+
+class JsonTable(Node):
+    __slots__ = {'context_item': 'JsonValueExpr*', 'pathspec': 'JsonTablePathSpec*', 'passing': 'List*', 'columns': 'List*', 'on_error': 'JsonBehavior*', 'alias': 'Alias*', 'lateral': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, context_item=None, pathspec=None, passing=None, columns=None, on_error=None, alias=None, lateral=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((context_item is not None
+             and pathspec is passing is columns is on_error is alias is lateral is location is None  # noqa: E501
+             and isinstance(context_item, dict)
+             and '@' in context_item)):
+            super().__init__(context_item)
+        else:
+            self.context_item = context_item
+            self.pathspec = pathspec
+            self.passing = passing
+            self.columns = columns
+            self.on_error = on_error
+            self.alias = alias
+            self.lateral = lateral
+            self.location = location
+
+
+class JsonTableColumn(Node):
+    __slots__ = {'coltype': 'JsonTableColumnType', 'name': 'char*', 'typeName': 'TypeName*', 'pathspec': 'JsonTablePathSpec*', 'format': 'JsonFormat*', 'wrapper': 'JsonWrapper', 'quotes': 'JsonQuotes', 'columns': 'List*', 'on_empty': 'JsonBehavior*', 'on_error': 'JsonBehavior*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, coltype=None, name=None, typeName=None, pathspec=None, format=None, wrapper=None, quotes=None, columns=None, on_empty=None, on_error=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((coltype is not None
+             and name is typeName is pathspec is format is wrapper is quotes is columns is on_empty is on_error is location is None  # noqa: E501
+             and isinstance(coltype, dict)
+             and '@' in coltype)):
+            super().__init__(coltype)
+        else:
+            self.coltype = coltype
+            self.name = name
+            self.typeName = typeName
+            self.pathspec = pathspec
+            self.format = format
+            self.wrapper = wrapper
+            self.quotes = quotes
+            self.columns = columns
+            self.on_empty = on_empty
+            self.on_error = on_error
+            self.location = location
+
+
+class JsonTablePathSpec(Node):
+    __slots__ = {'string': 'Node*', 'name': 'char*', 'name_location': 'ParseLoc', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location', 'name_location'}
+
+    def __init__(self, string=None, name=None, name_location=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((string is not None
+             and name is name_location is location is None  # noqa: E501
+             and isinstance(string, dict)
+             and '@' in string)):
+            super().__init__(string)
+        else:
+            self.string = string
+            self.name = name
+            self.name_location = name_location
+            self.location = location
 
 
 class JsonValueExpr(Node):
@@ -2823,16 +3089,16 @@ class LockingClause(Node):
 
 
 class MergeAction(Node):
-    __slots__ = {'matched': 'bool', 'commandType': 'CmdType', 'override': 'OverridingKind', 'qual': 'Node*', 'targetList': 'List*', 'updateColnos': 'List*'}  # noqa: E501
+    __slots__ = {'matchKind': 'MergeMatchKind', 'commandType': 'CmdType', 'override': 'OverridingKind', 'qual': 'Node*', 'targetList': 'List*', 'updateColnos': 'List*'}  # noqa: E501
 
-    def __init__(self, matched=None, commandType=None, override=None, qual=None, targetList=None, updateColnos=None):  # pragma: no cover  # noqa: E501
-        if ((matched is not None
+    def __init__(self, matchKind=None, commandType=None, override=None, qual=None, targetList=None, updateColnos=None):  # pragma: no cover  # noqa: E501
+        if ((matchKind is not None
              and commandType is override is qual is targetList is updateColnos is None  # noqa: E501
-             and isinstance(matched, dict)
-             and '@' in matched)):
-            super().__init__(matched)
+             and isinstance(matchKind, dict)
+             and '@' in matchKind)):
+            super().__init__(matchKind)
         else:
-            self.matched = matched
+            self.matchKind = matchKind
             self.commandType = commandType
             self.override = override
             self.qual = qual
@@ -2841,11 +3107,11 @@ class MergeAction(Node):
 
 
 class MergeStmt(Node):
-    __slots__ = {'relation': 'RangeVar*', 'sourceRelation': 'Node*', 'joinCondition': 'Node*', 'mergeWhenClauses': 'List*', 'withClause': 'WithClause*'}  # noqa: E501
+    __slots__ = {'relation': 'RangeVar*', 'sourceRelation': 'Node*', 'joinCondition': 'Node*', 'mergeWhenClauses': 'List*', 'returningList': 'List*', 'withClause': 'WithClause*'}  # noqa: E501
 
-    def __init__(self, relation=None, sourceRelation=None, joinCondition=None, mergeWhenClauses=None, withClause=None):  # pragma: no cover  # noqa: E501
+    def __init__(self, relation=None, sourceRelation=None, joinCondition=None, mergeWhenClauses=None, returningList=None, withClause=None):  # pragma: no cover  # noqa: E501
         if ((relation is not None
-             and sourceRelation is joinCondition is mergeWhenClauses is withClause is None  # noqa: E501
+             and sourceRelation is joinCondition is mergeWhenClauses is returningList is withClause is None  # noqa: E501
              and isinstance(relation, dict)
              and '@' in relation)):
             super().__init__(relation)
@@ -2854,20 +3120,35 @@ class MergeStmt(Node):
             self.sourceRelation = sourceRelation
             self.joinCondition = joinCondition
             self.mergeWhenClauses = mergeWhenClauses
+            self.returningList = returningList
             self.withClause = withClause
 
 
-class MergeWhenClause(Node):
-    __slots__ = {'matched': 'bool', 'commandType': 'CmdType', 'override': 'OverridingKind', 'condition': 'Node*', 'targetList': 'List*', 'values': 'List*'}  # noqa: E501
+class MergeSupportFunc(Expr):
+    __slots__ = {'location': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, matched=None, commandType=None, override=None, condition=None, targetList=None, values=None):  # pragma: no cover  # noqa: E501
-        if ((matched is not None
-             and commandType is override is condition is targetList is values is None  # noqa: E501
-             and isinstance(matched, dict)
-             and '@' in matched)):
-            super().__init__(matched)
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, location=None):  # pragma: no cover  # noqa: E501
+        if ((location is not None
+             and isinstance(location, dict)
+             and '@' in location)):
+            super().__init__(location)
         else:
-            self.matched = matched
+            self.location = location
+
+
+class MergeWhenClause(Node):
+    __slots__ = {'matchKind': 'MergeMatchKind', 'commandType': 'CmdType', 'override': 'OverridingKind', 'condition': 'Node*', 'targetList': 'List*', 'values': 'List*'}  # noqa: E501
+
+    def __init__(self, matchKind=None, commandType=None, override=None, condition=None, targetList=None, values=None):  # pragma: no cover  # noqa: E501
+        if ((matchKind is not None
+             and commandType is override is condition is targetList is values is None  # noqa: E501
+             and isinstance(matchKind, dict)
+             and '@' in matchKind)):
+            super().__init__(matchKind)
+        else:
+            self.matchKind = matchKind
             self.commandType = commandType
             self.override = override
             self.condition = condition
@@ -2876,7 +3157,9 @@ class MergeWhenClause(Node):
 
 
 class MinMaxExpr(Expr):
-    __slots__ = {'op': 'MinMaxOp', 'args': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'op': 'MinMaxOp', 'args': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, op=None, args=None, location=None):  # pragma: no cover  # noqa: E501
         if ((op is not None
@@ -2906,7 +3189,9 @@ class MultiAssignRef(Node):
 
 
 class NamedArgExpr(Expr):
-    __slots__ = {'arg': 'Expr*', 'name': 'char*', 'argnumber': 'int', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'name': 'char*', 'argnumber': 'int', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, name=None, argnumber=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -2936,7 +3221,9 @@ class NotifyStmt(Node):
 
 
 class NullTest(Expr):
-    __slots__ = {'arg': 'Expr*', 'nulltesttype': 'NullTestType', 'argisrow': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'nulltesttype': 'NullTestType', 'argisrow': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, nulltesttype=None, argisrow=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -2968,7 +3255,9 @@ class ObjectWithArgs(Node):
 
 
 class OnConflictClause(Node):
-    __slots__ = {'action': 'OnConflictAction', 'infer': 'InferClause*', 'targetList': 'List*', 'whereClause': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'action': 'OnConflictAction', 'infer': 'InferClause*', 'targetList': 'List*', 'whereClause': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, action=None, infer=None, targetList=None, whereClause=None, location=None):  # pragma: no cover  # noqa: E501
         if ((action is not None
@@ -3004,7 +3293,9 @@ class OnConflictExpr(Node):
 
 
 class OpExpr(Expr):
-    __slots__ = {'opretset': 'bool', 'args': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'opretset': 'bool', 'args': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, opretset=None, args=None, location=None):  # pragma: no cover  # noqa: E501
         if ((opretset is not None
@@ -3019,7 +3310,9 @@ class OpExpr(Expr):
 
 
 class PLAssignStmt(Node):
-    __slots__ = {'name': 'char*', 'indirection': 'List*', 'nnames': 'int', 'val': 'SelectStmt*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'name': 'char*', 'indirection': 'List*', 'nnames': 'int', 'val': 'SelectStmt*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, name=None, indirection=None, nnames=None, val=None, location=None):  # pragma: no cover  # noqa: E501
         if ((name is not None
@@ -3036,7 +3329,9 @@ class PLAssignStmt(Node):
 
 
 class Param(Expr):
-    __slots__ = {'paramkind': 'ParamKind', 'paramid': 'int', 'paramtypmod': 'int32', 'location': 'int'}  # noqa: E501
+    __slots__ = {'paramkind': 'ParamKind', 'paramid': 'int', 'paramtypmod': 'int32', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, paramkind=None, paramid=None, paramtypmod=None, location=None):  # pragma: no cover  # noqa: E501
         if ((paramkind is not None
@@ -3052,7 +3347,9 @@ class Param(Expr):
 
 
 class ParamRef(Node):
-    __slots__ = {'number': 'int', 'location': 'int'}  # noqa: E501
+    __slots__ = {'number': 'int', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, number=None, location=None):  # pragma: no cover  # noqa: E501
         if ((number is not None
@@ -3066,7 +3363,9 @@ class ParamRef(Node):
 
 
 class PartitionBoundSpec(Node):
-    __slots__ = {'strategy': 'char', 'is_default': 'bool', 'modulus': 'int', 'remainder': 'int', 'listdatums': 'List*', 'lowerdatums': 'List*', 'upperdatums': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'strategy': 'char', 'is_default': 'bool', 'modulus': 'int', 'remainder': 'int', 'listdatums': 'List*', 'lowerdatums': 'List*', 'upperdatums': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, strategy=None, is_default=None, modulus=None, remainder=None, listdatums=None, lowerdatums=None, upperdatums=None, location=None):  # pragma: no cover  # noqa: E501
         if ((strategy is not None
@@ -3101,7 +3400,9 @@ class PartitionCmd(Node):
 
 
 class PartitionElem(Node):
-    __slots__ = {'name': 'char*', 'expr': 'Node*', 'collation': 'List*', 'opclass': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'name': 'char*', 'expr': 'Node*', 'collation': 'List*', 'opclass': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, name=None, expr=None, collation=None, opclass=None, location=None):  # pragma: no cover  # noqa: E501
         if ((name is not None
@@ -3118,7 +3419,9 @@ class PartitionElem(Node):
 
 
 class PartitionRangeDatum(Node):
-    __slots__ = {'kind': 'PartitionRangeDatumKind', 'value': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'kind': 'PartitionRangeDatumKind', 'value': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, kind=None, value=None, location=None):  # pragma: no cover  # noqa: E501
         if ((kind is not None
@@ -3133,7 +3436,9 @@ class PartitionRangeDatum(Node):
 
 
 class PartitionSpec(Node):
-    __slots__ = {'strategy': 'PartitionStrategy', 'partParams': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'strategy': 'PartitionStrategy', 'partParams': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, strategy=None, partParams=None, location=None):  # pragma: no cover  # noqa: E501
         if ((strategy is not None
@@ -3163,7 +3468,9 @@ class PrepareStmt(Node):
 
 
 class PublicationObjSpec(Node):
-    __slots__ = {'pubobjtype': 'PublicationObjSpecType', 'name': 'char*', 'pubtable': 'PublicationTable*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'pubobjtype': 'PublicationObjSpecType', 'name': 'char*', 'pubtable': 'PublicationTable*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, pubobjtype=None, name=None, pubtable=None, location=None):  # pragma: no cover  # noqa: E501
         if ((pubobjtype is not None
@@ -3194,11 +3501,13 @@ class PublicationTable(Node):
 
 
 class Query(Node):
-    __slots__ = {'commandType': 'CmdType', 'querySource': 'QuerySource', 'canSetTag': 'bool', 'utilityStmt': 'Node*', 'resultRelation': 'int', 'hasAggs': 'bool', 'hasWindowFuncs': 'bool', 'hasTargetSRFs': 'bool', 'hasSubLinks': 'bool', 'hasDistinctOn': 'bool', 'hasRecursive': 'bool', 'hasModifyingCTE': 'bool', 'hasForUpdate': 'bool', 'hasRowSecurity': 'bool', 'isReturn': 'bool', 'cteList': 'List*', 'rtable': 'List*', 'rteperminfos': 'List*', 'jointree': 'FromExpr*', 'mergeActionList': 'List*', 'mergeUseOuterJoin': 'bool', 'targetList': 'List*', 'override': 'OverridingKind', 'onConflict': 'OnConflictExpr*', 'returningList': 'List*', 'groupClause': 'List*', 'groupDistinct': 'bool', 'groupingSets': 'List*', 'havingQual': 'Node*', 'windowClause': 'List*', 'distinctClause': 'List*', 'sortClause': 'List*', 'limitOffset': 'Node*', 'limitCount': 'Node*', 'limitOption': 'LimitOption', 'rowMarks': 'List*', 'setOperations': 'Node*', 'constraintDeps': 'List*', 'withCheckOptions': 'List*', 'stmt_location': 'int', 'stmt_len': 'int'}  # noqa: E501
+    __slots__ = {'commandType': 'CmdType', 'querySource': 'QuerySource', 'canSetTag': 'bool', 'utilityStmt': 'Node*', 'resultRelation': 'int', 'hasAggs': 'bool', 'hasWindowFuncs': 'bool', 'hasTargetSRFs': 'bool', 'hasSubLinks': 'bool', 'hasDistinctOn': 'bool', 'hasRecursive': 'bool', 'hasModifyingCTE': 'bool', 'hasForUpdate': 'bool', 'hasRowSecurity': 'bool', 'isReturn': 'bool', 'cteList': 'List*', 'rtable': 'List*', 'rteperminfos': 'List*', 'jointree': 'FromExpr*', 'mergeActionList': 'List*', 'mergeTargetRelation': 'int', 'mergeJoinCondition': 'Node*', 'targetList': 'List*', 'override': 'OverridingKind', 'onConflict': 'OnConflictExpr*', 'returningList': 'List*', 'groupClause': 'List*', 'groupDistinct': 'bool', 'groupingSets': 'List*', 'havingQual': 'Node*', 'windowClause': 'List*', 'distinctClause': 'List*', 'sortClause': 'List*', 'limitOffset': 'Node*', 'limitCount': 'Node*', 'limitOption': 'LimitOption', 'rowMarks': 'List*', 'setOperations': 'Node*', 'constraintDeps': 'List*', 'withCheckOptions': 'List*', 'stmt_location': 'ParseLoc', 'stmt_len': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, commandType=None, querySource=None, canSetTag=None, utilityStmt=None, resultRelation=None, hasAggs=None, hasWindowFuncs=None, hasTargetSRFs=None, hasSubLinks=None, hasDistinctOn=None, hasRecursive=None, hasModifyingCTE=None, hasForUpdate=None, hasRowSecurity=None, isReturn=None, cteList=None, rtable=None, rteperminfos=None, jointree=None, mergeActionList=None, mergeUseOuterJoin=None, targetList=None, override=None, onConflict=None, returningList=None, groupClause=None, groupDistinct=None, groupingSets=None, havingQual=None, windowClause=None, distinctClause=None, sortClause=None, limitOffset=None, limitCount=None, limitOption=None, rowMarks=None, setOperations=None, constraintDeps=None, withCheckOptions=None, stmt_location=None, stmt_len=None):  # pragma: no cover  # noqa: E501
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'stmt_len', 'stmt_location'}
+
+    def __init__(self, commandType=None, querySource=None, canSetTag=None, utilityStmt=None, resultRelation=None, hasAggs=None, hasWindowFuncs=None, hasTargetSRFs=None, hasSubLinks=None, hasDistinctOn=None, hasRecursive=None, hasModifyingCTE=None, hasForUpdate=None, hasRowSecurity=None, isReturn=None, cteList=None, rtable=None, rteperminfos=None, jointree=None, mergeActionList=None, mergeTargetRelation=None, mergeJoinCondition=None, targetList=None, override=None, onConflict=None, returningList=None, groupClause=None, groupDistinct=None, groupingSets=None, havingQual=None, windowClause=None, distinctClause=None, sortClause=None, limitOffset=None, limitCount=None, limitOption=None, rowMarks=None, setOperations=None, constraintDeps=None, withCheckOptions=None, stmt_location=None, stmt_len=None):  # pragma: no cover  # noqa: E501
         if ((commandType is not None
-             and querySource is canSetTag is utilityStmt is resultRelation is hasAggs is hasWindowFuncs is hasTargetSRFs is hasSubLinks is hasDistinctOn is hasRecursive is hasModifyingCTE is hasForUpdate is hasRowSecurity is isReturn is cteList is rtable is rteperminfos is jointree is mergeActionList is mergeUseOuterJoin is targetList is override is onConflict is returningList is groupClause is groupDistinct is groupingSets is havingQual is windowClause is distinctClause is sortClause is limitOffset is limitCount is limitOption is rowMarks is setOperations is constraintDeps is withCheckOptions is stmt_location is stmt_len is None  # noqa: E501
+             and querySource is canSetTag is utilityStmt is resultRelation is hasAggs is hasWindowFuncs is hasTargetSRFs is hasSubLinks is hasDistinctOn is hasRecursive is hasModifyingCTE is hasForUpdate is hasRowSecurity is isReturn is cteList is rtable is rteperminfos is jointree is mergeActionList is mergeTargetRelation is mergeJoinCondition is targetList is override is onConflict is returningList is groupClause is groupDistinct is groupingSets is havingQual is windowClause is distinctClause is sortClause is limitOffset is limitCount is limitOption is rowMarks is setOperations is constraintDeps is withCheckOptions is stmt_location is stmt_len is None  # noqa: E501
              and isinstance(commandType, dict)
              and '@' in commandType)):
             super().__init__(commandType)
@@ -3223,7 +3532,8 @@ class Query(Node):
             self.rteperminfos = rteperminfos
             self.jointree = jointree
             self.mergeActionList = mergeActionList
-            self.mergeUseOuterJoin = mergeUseOuterJoin
+            self.mergeTargetRelation = mergeTargetRelation
+            self.mergeJoinCondition = mergeJoinCondition
             self.targetList = targetList
             self.override = override
             self.onConflict = onConflict
@@ -3297,7 +3607,9 @@ class RangeSubselect(Node):
 
 
 class RangeTableFunc(Node):
-    __slots__ = {'lateral': 'bool', 'docexpr': 'Node*', 'rowexpr': 'Node*', 'namespaces': 'List*', 'columns': 'List*', 'alias': 'Alias*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'lateral': 'bool', 'docexpr': 'Node*', 'rowexpr': 'Node*', 'namespaces': 'List*', 'columns': 'List*', 'alias': 'Alias*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, lateral=None, docexpr=None, rowexpr=None, namespaces=None, columns=None, alias=None, location=None):  # pragma: no cover  # noqa: E501
         if ((lateral is not None
@@ -3316,7 +3628,9 @@ class RangeTableFunc(Node):
 
 
 class RangeTableFuncCol(Node):
-    __slots__ = {'colname': 'char*', 'typeName': 'TypeName*', 'for_ordinality': 'bool', 'is_not_null': 'bool', 'colexpr': 'Node*', 'coldefexpr': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'colname': 'char*', 'typeName': 'TypeName*', 'for_ordinality': 'bool', 'is_not_null': 'bool', 'colexpr': 'Node*', 'coldefexpr': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, colname=None, typeName=None, for_ordinality=None, is_not_null=None, colexpr=None, coldefexpr=None, location=None):  # pragma: no cover  # noqa: E501
         if ((colname is not None
@@ -3335,7 +3649,9 @@ class RangeTableFuncCol(Node):
 
 
 class RangeTableSample(Node):
-    __slots__ = {'relation': 'Node*', 'method': 'List*', 'args': 'List*', 'repeatable': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'relation': 'Node*', 'method': 'List*', 'args': 'List*', 'repeatable': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, relation=None, method=None, args=None, repeatable=None, location=None):  # pragma: no cover  # noqa: E501
         if ((relation is not None
@@ -3352,20 +3668,23 @@ class RangeTableSample(Node):
 
 
 class RangeTblEntry(Node):
-    __slots__ = {'rtekind': 'RTEKind', 'relkind': 'char', 'rellockmode': 'int', 'tablesample': 'TableSampleClause*', 'perminfoindex': 'Index', 'subquery': 'Query*', 'security_barrier': 'bool', 'jointype': 'JoinType', 'joinmergedcols': 'int', 'joinaliasvars': 'List*', 'joinleftcols': 'List*', 'joinrightcols': 'List*', 'join_using_alias': 'Alias*', 'functions': 'List*', 'funcordinality': 'bool', 'tablefunc': 'TableFunc*', 'values_lists': 'List*', 'ctename': 'char*', 'ctelevelsup': 'Index', 'self_reference': 'bool', 'coltypes': 'List*', 'coltypmods': 'List*', 'colcollations': 'List*', 'enrname': 'char*', 'enrtuples': 'Cardinality', 'alias': 'Alias*', 'eref': 'Alias*', 'lateral': 'bool', 'inh': 'bool', 'inFromCl': 'bool', 'securityQuals': 'List*'}  # noqa: E501
+    __slots__ = {'alias': 'Alias*', 'eref': 'Alias*', 'rtekind': 'RTEKind', 'inh': 'bool', 'relkind': 'char', 'rellockmode': 'int', 'perminfoindex': 'Index', 'tablesample': 'TableSampleClause*', 'subquery': 'Query*', 'security_barrier': 'bool', 'jointype': 'JoinType', 'joinmergedcols': 'int', 'joinaliasvars': 'List*', 'joinleftcols': 'List*', 'joinrightcols': 'List*', 'join_using_alias': 'Alias*', 'functions': 'List*', 'funcordinality': 'bool', 'tablefunc': 'TableFunc*', 'values_lists': 'List*', 'ctename': 'char*', 'ctelevelsup': 'Index', 'self_reference': 'bool', 'coltypes': 'List*', 'coltypmods': 'List*', 'colcollations': 'List*', 'enrname': 'char*', 'enrtuples': 'Cardinality', 'lateral': 'bool', 'inFromCl': 'bool', 'securityQuals': 'List*'}  # noqa: E501
 
-    def __init__(self, rtekind=None, relkind=None, rellockmode=None, tablesample=None, perminfoindex=None, subquery=None, security_barrier=None, jointype=None, joinmergedcols=None, joinaliasvars=None, joinleftcols=None, joinrightcols=None, join_using_alias=None, functions=None, funcordinality=None, tablefunc=None, values_lists=None, ctename=None, ctelevelsup=None, self_reference=None, coltypes=None, coltypmods=None, colcollations=None, enrname=None, enrtuples=None, alias=None, eref=None, lateral=None, inh=None, inFromCl=None, securityQuals=None):  # pragma: no cover  # noqa: E501
-        if ((rtekind is not None
-             and relkind is rellockmode is tablesample is perminfoindex is subquery is security_barrier is jointype is joinmergedcols is joinaliasvars is joinleftcols is joinrightcols is join_using_alias is functions is funcordinality is tablefunc is values_lists is ctename is ctelevelsup is self_reference is coltypes is coltypmods is colcollations is enrname is enrtuples is alias is eref is lateral is inh is inFromCl is securityQuals is None  # noqa: E501
-             and isinstance(rtekind, dict)
-             and '@' in rtekind)):
-            super().__init__(rtekind)
+    def __init__(self, alias=None, eref=None, rtekind=None, inh=None, relkind=None, rellockmode=None, perminfoindex=None, tablesample=None, subquery=None, security_barrier=None, jointype=None, joinmergedcols=None, joinaliasvars=None, joinleftcols=None, joinrightcols=None, join_using_alias=None, functions=None, funcordinality=None, tablefunc=None, values_lists=None, ctename=None, ctelevelsup=None, self_reference=None, coltypes=None, coltypmods=None, colcollations=None, enrname=None, enrtuples=None, lateral=None, inFromCl=None, securityQuals=None):  # pragma: no cover  # noqa: E501
+        if ((alias is not None
+             and eref is rtekind is inh is relkind is rellockmode is perminfoindex is tablesample is subquery is security_barrier is jointype is joinmergedcols is joinaliasvars is joinleftcols is joinrightcols is join_using_alias is functions is funcordinality is tablefunc is values_lists is ctename is ctelevelsup is self_reference is coltypes is coltypmods is colcollations is enrname is enrtuples is lateral is inFromCl is securityQuals is None  # noqa: E501
+             and isinstance(alias, dict)
+             and '@' in alias)):
+            super().__init__(alias)
         else:
+            self.alias = alias
+            self.eref = eref
             self.rtekind = rtekind
+            self.inh = inh
             self.relkind = relkind
             self.rellockmode = rellockmode
-            self.tablesample = tablesample
             self.perminfoindex = perminfoindex
+            self.tablesample = tablesample
             self.subquery = subquery
             self.security_barrier = security_barrier
             self.jointype = jointype
@@ -3386,10 +3705,7 @@ class RangeTblEntry(Node):
             self.colcollations = colcollations
             self.enrname = enrname
             self.enrtuples = enrtuples
-            self.alias = alias
-            self.eref = eref
             self.lateral = lateral
-            self.inh = inh
             self.inFromCl = inFromCl
             self.securityQuals = securityQuals
 
@@ -3426,7 +3742,9 @@ class RangeTblRef(Node):
 
 
 class RangeVar(Node):
-    __slots__ = {'catalogname': 'char*', 'schemaname': 'char*', 'relname': 'char*', 'inh': 'bool', 'relpersistence': 'char', 'alias': 'Alias*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'catalogname': 'char*', 'schemaname': 'char*', 'relname': 'char*', 'inh': 'bool', 'relpersistence': 'char', 'alias': 'Alias*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, catalogname=None, schemaname=None, relname=None, inh=None, relpersistence=None, alias=None, location=None):  # pragma: no cover  # noqa: E501
         if ((catalogname is not None
@@ -3445,7 +3763,9 @@ class RangeVar(Node):
 
 
 class RawStmt(Node):
-    __slots__ = {'stmt': 'Node*', 'stmt_location': 'int', 'stmt_len': 'int'}  # noqa: E501
+    __slots__ = {'stmt': 'Node*', 'stmt_location': 'ParseLoc', 'stmt_len': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'stmt_len', 'stmt_location'}
 
     def __init__(self, stmt=None, stmt_location=None, stmt_len=None):  # pragma: no cover  # noqa: E501
         if ((stmt is not None
@@ -3505,9 +3825,9 @@ class ReindexStmt(Node):
 
 
 class RelabelType(Expr):
-    __slots__ = {'arg': 'Expr*', 'resulttypmod': 'int32', 'relabelformat': 'CoercionForm', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Expr*', 'resulttypmod': 'int32', 'relabelformat': 'CoercionForm', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'relabelformat'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location', 'relabelformat'}
 
     def __init__(self, arg=None, resulttypmod=None, relabelformat=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -3557,7 +3877,9 @@ class ReplicaIdentityStmt(Node):
 
 
 class ResTarget(Node):
-    __slots__ = {'name': 'char*', 'indirection': 'List*', 'val': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'name': 'char*', 'indirection': 'List*', 'val': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, name=None, indirection=None, val=None, location=None):  # pragma: no cover  # noqa: E501
         if ((name is not None
@@ -3585,7 +3907,9 @@ class ReturnStmt(Node):
 
 
 class RoleSpec(Node):
-    __slots__ = {'roletype': 'RoleSpecType', 'rolename': 'char*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'roletype': 'RoleSpecType', 'rolename': 'char*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, roletype=None, rolename=None, location=None):  # pragma: no cover  # noqa: E501
         if ((roletype is not None
@@ -3618,9 +3942,9 @@ class RowCompareExpr(Expr):
 
 
 class RowExpr(Expr):
-    __slots__ = {'args': 'List*', 'row_format': 'CoercionForm', 'colnames': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'args': 'List*', 'row_format': 'CoercionForm', 'colnames': 'List*', 'location': 'ParseLoc'}  # noqa: E501
 
-    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'row_format'}
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location', 'row_format'}
 
     def __init__(self, args=None, row_format=None, colnames=None, location=None):  # pragma: no cover  # noqa: E501
         if ((args is not None
@@ -3671,7 +3995,9 @@ class RuleStmt(Node):
 
 
 class SQLValueFunction(Expr):
-    __slots__ = {'op': 'SQLValueFunctionOp', 'typmod': 'int32', 'location': 'int'}  # noqa: E501
+    __slots__ = {'op': 'SQLValueFunctionOp', 'typmod': 'int32', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, op=None, typmod=None, location=None):  # pragma: no cover  # noqa: E501
         if ((op is not None
@@ -3686,7 +4012,9 @@ class SQLValueFunction(Expr):
 
 
 class ScalarArrayOpExpr(Expr):
-    __slots__ = {'useOr': 'bool', 'args': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'useOr': 'bool', 'args': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, useOr=None, args=None, location=None):  # pragma: no cover  # noqa: E501
         if ((useOr is not None
@@ -3769,7 +4097,9 @@ class SetOperationStmt(Node):
 
 
 class SetToDefault(Expr):
-    __slots__ = {'typeMod': 'int32', 'location': 'int'}  # noqa: E501
+    __slots__ = {'typeMod': 'int32', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, typeMod=None, location=None):  # pragma: no cover  # noqa: E501
         if ((typeMod is not None
@@ -3782,8 +4112,17 @@ class SetToDefault(Expr):
             self.location = location
 
 
+class SinglePartitionSpec(Node):
+    __slots__ = {}  # noqa: E501
+
+    def __init__(self):  # pragma: no cover
+        pass
+
+
 class SortBy(Node):
-    __slots__ = {'node': 'Node*', 'sortby_dir': 'SortByDir', 'sortby_nulls': 'SortByNulls', 'useOp': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'node': 'Node*', 'sortby_dir': 'SortByDir', 'sortby_nulls': 'SortByNulls', 'useOp': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, node=None, sortby_dir=None, sortby_nulls=None, useOp=None, location=None):  # pragma: no cover  # noqa: E501
         if ((node is not None
@@ -3841,7 +4180,9 @@ class String(Node):
 
 
 class SubLink(Expr):
-    __slots__ = {'subLinkType': 'SubLinkType', 'subLinkId': 'int', 'testexpr': 'Node*', 'operName': 'List*', 'subselect': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'subLinkType': 'SubLinkType', 'subLinkId': 'int', 'testexpr': 'Node*', 'operName': 'List*', 'subselect': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, subLinkType=None, subLinkId=None, testexpr=None, operName=None, subselect=None, location=None):  # pragma: no cover  # noqa: E501
         if ((subLinkType is not None
@@ -3902,15 +4243,18 @@ class SubscriptingRef(Expr):
 
 
 class TableFunc(Node):
-    __slots__ = {'ns_uris': 'List*', 'ns_names': 'List*', 'docexpr': 'Node*', 'rowexpr': 'Node*', 'colnames': 'List*', 'coltypes': 'List*', 'coltypmods': 'List*', 'colcollations': 'List*', 'colexprs': 'List*', 'coldefexprs': 'List*', 'notnulls': 'Bitmapset*', 'ordinalitycol': 'int', 'location': 'int'}  # noqa: E501
+    __slots__ = {'functype': 'TableFuncType', 'ns_uris': 'List*', 'ns_names': 'List*', 'docexpr': 'Node*', 'rowexpr': 'Node*', 'colnames': 'List*', 'coltypes': 'List*', 'coltypmods': 'List*', 'colcollations': 'List*', 'colexprs': 'List*', 'coldefexprs': 'List*', 'colvalexprs': 'List*', 'passingvalexprs': 'List*', 'notnulls': 'Bitmapset*', 'plan': 'Node*', 'ordinalitycol': 'int', 'location': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, ns_uris=None, ns_names=None, docexpr=None, rowexpr=None, colnames=None, coltypes=None, coltypmods=None, colcollations=None, colexprs=None, coldefexprs=None, notnulls=None, ordinalitycol=None, location=None):  # pragma: no cover  # noqa: E501
-        if ((ns_uris is not None
-             and ns_names is docexpr is rowexpr is colnames is coltypes is coltypmods is colcollations is colexprs is coldefexprs is notnulls is ordinalitycol is location is None  # noqa: E501
-             and isinstance(ns_uris, dict)
-             and '@' in ns_uris)):
-            super().__init__(ns_uris)
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, functype=None, ns_uris=None, ns_names=None, docexpr=None, rowexpr=None, colnames=None, coltypes=None, coltypmods=None, colcollations=None, colexprs=None, coldefexprs=None, colvalexprs=None, passingvalexprs=None, notnulls=None, plan=None, ordinalitycol=None, location=None):  # pragma: no cover  # noqa: E501
+        if ((functype is not None
+             and ns_uris is ns_names is docexpr is rowexpr is colnames is coltypes is coltypmods is colcollations is colexprs is coldefexprs is colvalexprs is passingvalexprs is notnulls is plan is ordinalitycol is location is None  # noqa: E501
+             and isinstance(functype, dict)
+             and '@' in functype)):
+            super().__init__(functype)
         else:
+            self.functype = functype
             self.ns_uris = ns_uris
             self.ns_names = ns_names
             self.docexpr = docexpr
@@ -3921,7 +4265,10 @@ class TableFunc(Node):
             self.colcollations = colcollations
             self.colexprs = colexprs
             self.coldefexprs = coldefexprs
+            self.colvalexprs = colvalexprs
+            self.passingvalexprs = passingvalexprs
             self.notnulls = notnulls
+            self.plan = plan
             self.ordinalitycol = ordinalitycol
             self.location = location
 
@@ -3973,11 +4320,13 @@ class TargetEntry(Expr):
 
 
 class TransactionStmt(Node):
-    __slots__ = {'kind': 'TransactionStmtKind', 'options': 'List*', 'savepoint_name': 'char*', 'gid': 'char*', 'chain': 'bool'}  # noqa: E501
+    __slots__ = {'kind': 'TransactionStmtKind', 'options': 'List*', 'savepoint_name': 'char*', 'gid': 'char*', 'chain': 'bool', 'location': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, kind=None, options=None, savepoint_name=None, gid=None, chain=None):  # pragma: no cover  # noqa: E501
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, kind=None, options=None, savepoint_name=None, gid=None, chain=None, location=None):  # pragma: no cover  # noqa: E501
         if ((kind is not None
-             and options is savepoint_name is gid is chain is None  # noqa: E501
+             and options is savepoint_name is gid is chain is location is None  # noqa: E501
              and isinstance(kind, dict)
              and '@' in kind)):
             super().__init__(kind)
@@ -3987,6 +4336,7 @@ class TransactionStmt(Node):
             self.savepoint_name = savepoint_name
             self.gid = gid
             self.chain = chain
+            self.location = location
 
 
 class TriggerTransition(Node):
@@ -4020,7 +4370,9 @@ class TruncateStmt(Node):
 
 
 class TypeCast(Node):
-    __slots__ = {'arg': 'Node*', 'typeName': 'TypeName*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'arg': 'Node*', 'typeName': 'TypeName*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, arg=None, typeName=None, location=None):  # pragma: no cover  # noqa: E501
         if ((arg is not None
@@ -4035,7 +4387,9 @@ class TypeCast(Node):
 
 
 class TypeName(Node):
-    __slots__ = {'names': 'List*', 'setof': 'bool', 'pct_type': 'bool', 'typmods': 'List*', 'typemod': 'int32', 'arrayBounds': 'List*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'names': 'List*', 'setof': 'bool', 'pct_type': 'bool', 'typmods': 'List*', 'typemod': 'int32', 'arrayBounds': 'List*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, names=None, setof=None, pct_type=None, typmods=None, typemod=None, arrayBounds=None, location=None):  # pragma: no cover  # noqa: E501
         if ((names is not None
@@ -4113,7 +4467,9 @@ class VacuumStmt(Node):
 
 
 class Var(Expr):
-    __slots__ = {'varno': 'int', 'varattno': 'AttrNumber', 'vartypmod': 'int32', 'varnullingrels': 'Bitmapset*', 'varlevelsup': 'Index', 'location': 'int'}  # noqa: E501
+    __slots__ = {'varno': 'int', 'varattno': 'AttrNumber', 'vartypmod': 'int32', 'varnullingrels': 'Bitmapset*', 'varlevelsup': 'Index', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, varno=None, varattno=None, vartypmod=None, varnullingrels=None, varlevelsup=None, location=None):  # pragma: no cover  # noqa: E501
         if ((varno is not None
@@ -4177,11 +4533,11 @@ class ViewStmt(Node):
 
 
 class WindowClause(Node):
-    __slots__ = {'name': 'char*', 'refname': 'char*', 'partitionClause': 'List*', 'orderClause': 'List*', 'frameOptions': 'int', 'startOffset': 'Node*', 'endOffset': 'Node*', 'runCondition': 'List*', 'inRangeAsc': 'bool', 'inRangeNullsFirst': 'bool', 'winref': 'Index', 'copiedOrder': 'bool'}  # noqa: E501
+    __slots__ = {'name': 'char*', 'refname': 'char*', 'partitionClause': 'List*', 'orderClause': 'List*', 'frameOptions': 'int', 'startOffset': 'Node*', 'endOffset': 'Node*', 'inRangeAsc': 'bool', 'inRangeNullsFirst': 'bool', 'winref': 'Index', 'copiedOrder': 'bool'}  # noqa: E501
 
-    def __init__(self, name=None, refname=None, partitionClause=None, orderClause=None, frameOptions=None, startOffset=None, endOffset=None, runCondition=None, inRangeAsc=None, inRangeNullsFirst=None, winref=None, copiedOrder=None):  # pragma: no cover  # noqa: E501
+    def __init__(self, name=None, refname=None, partitionClause=None, orderClause=None, frameOptions=None, startOffset=None, endOffset=None, inRangeAsc=None, inRangeNullsFirst=None, winref=None, copiedOrder=None):  # pragma: no cover  # noqa: E501
         if ((name is not None
-             and refname is partitionClause is orderClause is frameOptions is startOffset is endOffset is runCondition is inRangeAsc is inRangeNullsFirst is winref is copiedOrder is None  # noqa: E501
+             and refname is partitionClause is orderClause is frameOptions is startOffset is endOffset is inRangeAsc is inRangeNullsFirst is winref is copiedOrder is None  # noqa: E501
              and isinstance(name, dict)
              and '@' in name)):
             super().__init__(name)
@@ -4193,7 +4549,6 @@ class WindowClause(Node):
             self.frameOptions = frameOptions
             self.startOffset = startOffset
             self.endOffset = endOffset
-            self.runCondition = runCondition
             self.inRangeAsc = inRangeAsc
             self.inRangeNullsFirst = inRangeNullsFirst
             self.winref = winref
@@ -4201,7 +4556,9 @@ class WindowClause(Node):
 
 
 class WindowDef(Node):
-    __slots__ = {'name': 'char*', 'refname': 'char*', 'partitionClause': 'List*', 'orderClause': 'List*', 'frameOptions': 'int', 'startOffset': 'Node*', 'endOffset': 'Node*', 'location': 'int'}  # noqa: E501
+    __slots__ = {'name': 'char*', 'refname': 'char*', 'partitionClause': 'List*', 'orderClause': 'List*', 'frameOptions': 'int', 'startOffset': 'Node*', 'endOffset': 'Node*', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, name=None, refname=None, partitionClause=None, orderClause=None, frameOptions=None, startOffset=None, endOffset=None, location=None):  # pragma: no cover  # noqa: E501
         if ((name is not None
@@ -4221,21 +4578,38 @@ class WindowDef(Node):
 
 
 class WindowFunc(Expr):
-    __slots__ = {'args': 'List*', 'aggfilter': 'Expr*', 'winref': 'Index', 'winstar': 'bool', 'winagg': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'args': 'List*', 'aggfilter': 'Expr*', 'runCondition': 'List*', 'winref': 'Index', 'winstar': 'bool', 'winagg': 'bool', 'location': 'ParseLoc'}  # noqa: E501
 
-    def __init__(self, args=None, aggfilter=None, winref=None, winstar=None, winagg=None, location=None):  # pragma: no cover  # noqa: E501
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
+
+    def __init__(self, args=None, aggfilter=None, runCondition=None, winref=None, winstar=None, winagg=None, location=None):  # pragma: no cover  # noqa: E501
         if ((args is not None
-             and aggfilter is winref is winstar is winagg is location is None  # noqa: E501
+             and aggfilter is runCondition is winref is winstar is winagg is location is None  # noqa: E501
              and isinstance(args, dict)
              and '@' in args)):
             super().__init__(args)
         else:
             self.args = args
             self.aggfilter = aggfilter
+            self.runCondition = runCondition
             self.winref = winref
             self.winstar = winstar
             self.winagg = winagg
             self.location = location
+
+
+class WindowFuncRunCondition(Expr):
+    __slots__ = {'wfunc_left': 'bool', 'arg': 'Expr*'}  # noqa: E501
+
+    def __init__(self, wfunc_left=None, arg=None):  # pragma: no cover  # noqa: E501
+        if ((wfunc_left is not None
+             and arg is None  # noqa: E501
+             and isinstance(wfunc_left, dict)
+             and '@' in wfunc_left)):
+            super().__init__(wfunc_left)
+        else:
+            self.wfunc_left = wfunc_left
+            self.arg = arg
 
 
 class WithCheckOption(Node):
@@ -4256,7 +4630,9 @@ class WithCheckOption(Node):
 
 
 class WithClause(Node):
-    __slots__ = {'ctes': 'List*', 'recursive': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'ctes': 'List*', 'recursive': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, ctes=None, recursive=None, location=None):  # pragma: no cover  # noqa: E501
         if ((ctes is not None
@@ -4271,7 +4647,9 @@ class WithClause(Node):
 
 
 class XmlExpr(Expr):
-    __slots__ = {'op': 'XmlExprOp', 'name': 'char*', 'named_args': 'List*', 'arg_names': 'List*', 'args': 'List*', 'xmloption': 'XmlOptionType', 'indent': 'bool', 'typmod': 'int32', 'location': 'int'}  # noqa: E501
+    __slots__ = {'op': 'XmlExprOp', 'name': 'char*', 'named_args': 'List*', 'arg_names': 'List*', 'args': 'List*', 'xmloption': 'XmlOptionType', 'indent': 'bool', 'typmod': 'int32', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Expr._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, op=None, name=None, named_args=None, arg_names=None, args=None, xmloption=None, indent=None, typmod=None, location=None):  # pragma: no cover  # noqa: E501
         if ((op is not None
@@ -4292,7 +4670,9 @@ class XmlExpr(Expr):
 
 
 class XmlSerialize(Node):
-    __slots__ = {'xmloption': 'XmlOptionType', 'expr': 'Node*', 'typeName': 'TypeName*', 'indent': 'bool', 'location': 'int'}  # noqa: E501
+    __slots__ = {'xmloption': 'XmlOptionType', 'expr': 'Node*', 'typeName': 'TypeName*', 'indent': 'bool', 'location': 'ParseLoc'}  # noqa: E501
+
+    _ATTRS_TO_IGNORE_IN_COMPARISON = Node._ATTRS_TO_IGNORE_IN_COMPARISON | {'location'}
 
     def __init__(self, xmloption=None, expr=None, typeName=None, indent=None, location=None):  # pragma: no cover  # noqa: E501
         if ((xmloption is not None
@@ -4364,7 +4744,7 @@ def _fixup_attribute_types_in_slots():
                                       else i
                                       for i in value)
                     return value
-            elif ctype in {'AclMode', 'AttrNumber', 'Index', 'RelFileNumber',
+            elif ctype in {'AclMode', 'AttrNumber', 'Index', 'ParseLoc', 'RelFileNumber',
                            'SubTransactionId', 'bits32', 'int', 'int16', 'int32', 'long',
                            'uint32', 'uint64'}:
                 ptype = int
@@ -4386,7 +4766,7 @@ def _fixup_attribute_types_in_slots():
                         return set(value)
                     else:
                         return value
-            elif ctype == 'ValUnion':
+            elif ctype in ('JsonTablePlan', 'ValUnion'):
                 ptype = Node
             else:
                 from pglast import enums

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from lockoptions.h @ 16-latest-0-g680f5ee
+# :Project:   pglast — DO NOT EDIT: automatically extracted from lockoptions.h @ 17-latest-dev-0-gf4a36d5
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © 2017-2024 Lele Gaifax
@@ -22,11 +22,13 @@ class LockClauseStrength(IntEnum):
     LCS_FORNOKEYUPDATE = auto()
     LCS_FORUPDATE = auto()
 
+
 class LockTupleMode(IntEnum):
     LockTupleKeyShare = 0
     LockTupleShare = auto()
     LockTupleNoKeyExclusive = auto()
     LockTupleExclusive = auto()
+
 
 class LockWaitPolicy(IntEnum):
     LockWaitBlock = 0

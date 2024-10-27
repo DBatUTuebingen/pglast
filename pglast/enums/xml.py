@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# :Project:   pglast -- DO NOT EDIT: automatically extracted from xml.h @ 16-latest-0-g680f5ee
+# :Project:   pglast — DO NOT EDIT: automatically extracted from xml.h @ 17-latest-dev-0-gf4a36d5
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
 # :Copyright: © 2017-2024 Lele Gaifax
@@ -20,9 +20,11 @@ class PgXmlStrictness(IntEnum):
     PG_XML_STRICTNESS_WELLFORMED = auto()
     PG_XML_STRICTNESS_ALL = auto()
 
+
 class XmlBinaryType(IntEnum):
     XMLBINARY_BASE64 = 0
     XMLBINARY_HEX = auto()
+
 
 class XmlStandaloneType(IntEnum):
     XML_STANDALONE_YES = 0
