@@ -318,24 +318,24 @@ cdef extern from "nodes/pg_list.h":
 
 cdef extern from "nodes/value.h":
     ctypedef struct Integer:
-        NodeTag type;
-        int ival;
+        NodeTag type
+        int ival
 
     ctypedef struct Float:
-        NodeTag type;
+        NodeTag type
         char *fval
 
     ctypedef struct Boolean:
-        NodeTag type;
-        bool boolval;
+        NodeTag type
+        bool boolval
 
     ctypedef struct String:
-        NodeTag type;
-        char *sval;
+        NodeTag type
+        char *sval
 
     ctypedef struct BitString:
-        NodeTag type;
-        char *bsval;
+        NodeTag type
+        char *bsval
 
     int intVal(Integer v)
     double floatVal(Float v)
@@ -345,12 +345,12 @@ cdef extern from "nodes/value.h":
 
 # ValUnion is a private type of the A_Const node, we need to redefine it here
 ctypedef union ValUnion:
-    Node node;
-    Integer ival;
-    Float fval;
-    Boolean boolval;
-    String sval;
-    BitString bsval;
+    Node node
+    Integer ival
+    Float fval
+    Boolean boolval
+    String sval
+    BitString bsval
 
 from libc.stdint cimport int16_t, int32_t, uint32_t, uint64_t
 """
