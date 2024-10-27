@@ -230,7 +230,6 @@ class Expr(Node):
     '''Abstract super class of several *expression* classes.'''
 
     __slots__ = ()
-
 """
 
 
