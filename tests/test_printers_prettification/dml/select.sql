@@ -502,3 +502,47 @@ SELECT 1
 FROM ONLY public.produit AS x
 WHERE produit_id OPERATOR(pg_catalog.=) $1
 FOR KEY SHARE OF x
+
+SELECT jt.* FROM
+ my_films,
+ JSON_TABLE (js, '$.favorites[*]' COLUMNS (
+   id FOR ORDINALITY,
+   kind text PATH '$.kind',
+   title text PATH '$.films[*].title' WITH WRAPPER,
+   director text PATH '$.films[*].director' WITH WRAPPER)) AS jt
+=
+SELECT jt.*
+FROM my_films
+   , json_table(js, '$.favorites[*]'
+                COLUMNS (id FOR ORDINALITY
+                       , kind text PATH '$.kind'
+                       , title text PATH '$.films[*].title' WITH UNCONDITIONAL WRAPPER
+                       , director text PATH '$.films[*].director' WITH UNCONDITIONAL WRAPPER)) AS jt
+
+SELECT * FROM JSON_TABLE (favorites, '$.favorites[*]'
+COLUMNS (
+  user_id FOR ORDINALITY,
+  NESTED '$.movies[*]'
+    COLUMNS (
+    movie_id FOR ORDINALITY,
+    mname text PATH '$.name',
+    director text),
+  NESTED '$.books[*]'
+    COLUMNS (
+      book_id FOR ORDINALITY,
+      bname text PATH '$.name',
+      NESTED '$.authors[*]'
+        COLUMNS (
+          author_id FOR ORDINALITY,
+          author_name text PATH '$.name'))))
+=
+SELECT *
+FROM json_table(favorites, '$.favorites[*]'
+                COLUMNS (user_id FOR ORDINALITY
+                       , NESTED PATH '$.movies[*]' COLUMNS (movie_id FOR ORDINALITY
+                                                          , mname text PATH '$.name'
+                                                          , director text)
+                       , NESTED PATH '$.books[*]' COLUMNS (book_id FOR ORDINALITY
+                                                         , bname text PATH '$.name'
+                                                         , NESTED PATH '$.authors[*]' COLUMNS (author_id FOR ORDINALITY
+                                                                                             , author_name text PATH '$.name'))))
