@@ -8,6 +8,16 @@ Changes
 Version 6
 #########
 
+6.7 (unreleased)
+~~~~~~~~~~~~~~~~
+
+- Generate wheels on PyPI using Python 3.13.0 final release, thanks to cibuildwheel `2.21.3`__
+
+  __ https://cibuildwheel.pypa.io/en/stable/changelog/#v2213
+
+- Improve CTEs printer, reducing horizontal space waste
+
+
 6.6 (2024-09-30)
 ~~~~~~~~~~~~~~~~
 
