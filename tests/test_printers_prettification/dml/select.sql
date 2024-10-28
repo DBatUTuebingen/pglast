@@ -472,8 +472,8 @@ WHERE t1.code LIKE (SELECT t2.code || '.%'
 with recursive t(n) as (values (1) union all select n+1 from t where n < 100)
 select sum(n) from t;
 =
-WITH RECURSIVE t(n)
-  AS (VALUES (1)
+WITH RECURSIVE t(n) AS
+     (VALUES (1)
 \n\
       UNION ALL
 \n\
@@ -487,10 +487,12 @@ WITH RECURSIVE t(n)
 with cte_1 as (select 1), cte_2 as (select * from cte_1)
 select * from cte_2
 =
-WITH cte_1 AS (SELECT 1)
+WITH cte_1 AS
+     (SELECT 1)
 \n\
-   , cte_2 AS (SELECT *
-               FROM cte_1)
+   , cte_2 AS
+     (SELECT *
+      FROM cte_1)
 \n\
   SELECT *
   FROM cte_2
