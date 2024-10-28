@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.7 (unreleased)
+6.7 (2024-10-28)
 ~~~~~~~~~~~~~~~~
 
 - Generate wheels on PyPI using Python 3.13.0 final release, thanks to cibuildwheel `2.21.3`__
