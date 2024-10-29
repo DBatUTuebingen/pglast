@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.8 (unreleased)
+6.8 (2024-10-29)
 ~~~~~~~~~~~~~~~~
 
 - Upgrade libpg_query to not-yet-publicly-released commit__, to solve an issue related to
