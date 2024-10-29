@@ -3,7 +3,7 @@
 # :Created:   ven 04 ago 2017 08:37:10 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021, 2023 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2023, 2024 Lele Gaifax
 #
 
 import json
@@ -55,6 +55,23 @@ BEGIN
     RETURN QUERY
     SELECT p_time_start + p_time_interval, 1234::bigint;
 END; $$ LANGUAGE plpgsql;""")
+    function = ptree[0]
+    assert isinstance(function, dict)
+    assert function.keys() == {'PLpgSQL_function'}
+
+    # See https://github.com/lelit/pglast/issues/156
+    ptree = parse_plpgsql("""\
+CREATE FUNCTION public.dz_sumfunc(
+    IN  p_in  INTEGER
+   ,OUT p_out public.dz_sumthing
+)
+AS $BODY$
+DECLARE
+BEGIN
+   p_out.sumattribute := p_in;
+END;
+$BODY$
+LANGUAGE plpgsql""")
     function = ptree[0]
     assert isinstance(function, dict)
     assert function.keys() == {'PLpgSQL_function'}
