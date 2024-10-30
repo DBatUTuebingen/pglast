@@ -232,10 +232,17 @@ class RawStream(OutputStream):
 
         self.separator()
 
-    def space(self, count=1):
-        "Emit a single whitespace, shall be overridden by the prettifier subclass."
+    def space(self, count=1, force=False):
+        """Emit a single whitespace, shall be overridden by the prettifier subclass.
 
-        self.separator()
+        :param int count: ignored in this implementation
+        :param bool force: when ``True``, unconditionally and immediately emit a single space
+        """
+
+        if force:
+            self.write(' ')
+        else:
+            self.separator()
 
     @contextmanager
     def push_indent(self, amount=0, relative=True):
@@ -575,8 +582,13 @@ class IndentedStream(RawStream):
 
         self.write('\n')
 
-    def space(self, count=1):
-        "Emit consecutive spaces."
+    def space(self, count=1, force=False):
+        """Emit consecutive spaces.
+
+        :param int count: how many spaces to emit
+        :param bool force: ignored by this implementation, honored only by
+                           :meth:`RawStream.space`
+        """
 
         self.write(' '*count)
 

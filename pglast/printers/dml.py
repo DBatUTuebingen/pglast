@@ -403,7 +403,10 @@ def common_table_expr(node, output):
     output.swrite('AS')
     cte_materialize_printer(node.ctematerialized, node, output)
     output.newline()
-    output.space(2)
+    # See https://github.com/lelit/pglast/issues/163: the "forced" space will happen only in
+    # the RawStream, that otherwise would not emit it before the opening paren of the
+    # expression. The IndentedStream ignores the `force` argument.
+    output.space(2, force=True)
     with output.expression(True):
         output.print_node(node.ctequery)
     if node.search_clause:
