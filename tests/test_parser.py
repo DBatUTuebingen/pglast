@@ -59,6 +59,23 @@ END; $$ LANGUAGE plpgsql;""")
     assert isinstance(function, dict)
     assert function.keys() == {'PLpgSQL_function'}
 
+    # See https://github.com/lelit/pglast/issues/156
+    ptree = parse_plpgsql("""\
+CREATE FUNCTION public.dz_sumfunc(
+    IN  p_in  INTEGER
+   ,OUT p_out public.dz_sumthing
+)
+AS $BODY$
+DECLARE
+BEGIN
+   p_out.sumattribute := p_in;
+END;
+$BODY$
+LANGUAGE plpgsql""")
+    function = ptree[0]
+    assert isinstance(function, dict)
+    assert function.keys() == {'PLpgSQL_function'}
+
 
 def test_fingerprint():
     sql1 = "SELECT a as b, c as d FROM atable AS btable WHERE a = 1 AND b in (1, 2)"
@@ -227,3 +244,32 @@ def test_parse_sql_json():
     '''
 
     assert used_tables(turkish_chars) == {'Schema.Table', 'Schema2.Table2'}
+
+
+@pytest.mark.xfail
+def test_issue157():
+    # See https://github.com/pganalyze/libpg_query/issues/261
+
+    query = """\
+CREATE OR REPLACE FUNCTION update_customer_total_sales(customer_id INT)
+RETURNS VOID AS $$
+DECLARE
+    total NUMERIC;
+BEGIN
+    -- Calculate the total sales for the specified customer
+    SELECT COALESCE(SUM(amount), 0) INTO total
+    FROM orders
+    WHERE customer_id $1;   -- <------ this part is invalid
+
+    -- Update the total_sales in the customers table
+    UPDATE customers
+    SET total_sales = total
+    WHERE customer_id;
+
+    -- Optionally, you can return the total for confirmation
+    RAISE NOTICE 'Total sales for customer ID %: %', customer_id, total;
+END;
+$$ LANGUAGE plpgsql"""
+
+    with pytest.raises(Error) as exc:
+        parse_plpgsql(query)

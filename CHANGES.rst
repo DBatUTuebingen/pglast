@@ -8,6 +8,26 @@ Changes
 Version 6
 #########
 
+6.8 (2024-10-29)
+~~~~~~~~~~~~~~~~
+
+- Upgrade libpg_query to not-yet-publicly-released commit__, to solve an issue related to
+  `plpgsql` (issue `#156`__)
+
+  __ https://github.com/pganalyze/libpg_query/commit/06670290ad39e61805ecacbc6267df61f6ae3d91
+  __ https://github.com/lelit/pglast/issues/156
+
+
+6.7 (2024-10-28)
+~~~~~~~~~~~~~~~~
+
+- Generate wheels on PyPI using Python 3.13.0 final release, thanks to cibuildwheel `2.21.3`__
+
+  __ https://cibuildwheel.pypa.io/en/stable/changelog/#v2213
+
+- Improve CTEs printer, reducing horizontal space waste
+
+
 6.6 (2024-09-30)
 ~~~~~~~~~~~~~~~~
 
@@ -34,8 +54,8 @@ Version 6
 
   __ https://github.com/lelit/pglast/issues/153
 
-- Upgrade libpg_query to not-yet-publicly-released `680f5ee67c6fdae497c8d1edfadd02b9b8eac74f
-  commit`__, to solve an issue related to `plpgsql` (issue `#154`__)
+- Upgrade libpg_query to not-yet-publicly-released commit__, to solve an issue related to
+  `plpgsql` (issue `#154`__)
 
   __ https://github.com/pganalyze/libpg_query/commit/680f5ee67c6fdae497c8d1edfadd02b9b8eac74f
   __ https://github.com/lelit/pglast/issues/154

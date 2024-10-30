@@ -401,12 +401,10 @@ def common_table_expr(node, output):
             if len(node.aliascolnames) > 1:
                 output.space(2)
             output.print_name(node.aliascolnames, ',')
-        output.indent(-1, False)
-        output.newline()
-
     output.swrite('AS')
     cte_materialize_printer(node.ctematerialized, node, output)
-    output.write(' ')
+    output.newline()
+    output.space(2)
     with output.expression(True):
         output.print_node(node.ctequery)
     if node.search_clause:
@@ -417,8 +415,6 @@ def common_table_expr(node, output):
         output.newline()
         output.newline()
         output.print_node(node.cycle_clause)
-    if node.aliascolnames:
-        output.dedent()
     output.newline()
 
 
