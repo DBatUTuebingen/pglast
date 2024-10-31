@@ -5,6 +5,28 @@
 Changes
 -------
 
+Version 7
+#########
+
+7.0.dev0 (unreleased)
+~~~~~~~~~~~~~~~~~~~~~
+
+- No visible changes with respect to v6, apart from the support for new/revised syntaxes of
+  `PostgreSQL 17`__
+
+  __ https://www.postgresql.org/docs/17/release-17.html
+
+~~~~~~~~~~~~~~~~~~~~
+**Breaking changes**
+~~~~~~~~~~~~~~~~~~~~
+
+- Target PostgreSQL 17, thanks to libpg_query `17-latest-dev`__
+
+  __ https://github.com/pganalyze/libpg_query/tree/17-latest-dev
+
+- Require Python >= 3.9
+
+
 Version 6
 #########
 
