@@ -423,6 +423,14 @@ Get a more compact representation
    FROM st
    WHERE (a = 'longvalue1') AND (b = 'longvalue2')
 
+Get an even more compact, normalized representation
+===================================================
+
+.. code-block:: shell
+
+   $ pgpp --normalize -S "select a,b,c from st    where a='foo'"
+   SELECT a, b, c FROM st WHERE a = 'foo'
+
 Obtain the *parse tree* of a ``SQL`` statement
 ==============================================
 

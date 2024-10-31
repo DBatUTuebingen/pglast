@@ -71,6 +71,12 @@ WHERE foo <> 0
                 main(['--parse-tree'])
             assert "'val': {'@': 'Integer', 'ival': 1}" in output.getvalue()
 
+    with StringIO("select a,b,c from st    where a='foo'") as input:
+        with UnclosableStream() as output:
+            with redirect_stdin(input), redirect_stdout(output):
+                main(['--normalize'])
+            assert output.getvalue() == "SELECT a, b, c FROM st WHERE a = 'foo'\n"
+
     with StringIO("""\
 CREATE FUNCTION add (a integer, b integer) RETURNS integer AS $$
 BEGIN RETURN a + b; END;
