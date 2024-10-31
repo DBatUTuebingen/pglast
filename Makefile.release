@@ -6,7 +6,7 @@
 # :Copyright: © 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Lele Gaifax
 #
 
-BUMPER := $(VENVDIR)/bin/bump_version
+BUMPER := $(VENVDIR)/bin/bump-my-version bump
 VERSION_TXT := version.txt
 VERSION = $(shell cat $(VERSION_TXT))
 MOD_INIT := pglast/__init__.py
@@ -22,38 +22,33 @@ assert-clean-tree:
 	@(test -z "$(shell git status -s --untracked=no)" || \
 	  (echo "UNCOMMITTED STUFF" && false))
 
+bump-version: $(VENVDIR)/extension.timestamp enums keywords printers-doc
+	$(BUMPER) $(VERSION_PART)
+	@echo ">>>"
+	@echo ">>> Do your duties (update CHANGES.rst for example), then"
+	@echo ">>> execute “make tag-$(RELEASE_KIND)release”."
+	@echo ">>>"
+
 help::
 	@printf "release\n\tBump version number\n"
 
 .PHONY: release
-release: $(VENVDIR)/extension.timestamp enums keywords printers-doc assert-clean-tree
-	$(BUMPER) $(VERSION_TXT)
-	@echo ">>>"
-	@echo ">>> Do your duties (update CHANGES.rst for example), then"
-	@echo ">>> execute “make tag-release”."
-	@echo ">>>"
+release: VERSION_PART = minor
+release: bump-version
 
 help::
 	@printf "dev-release\n\tBump the development version number\n"
 
 .PHONY: dev-release
-dev-release: $(VENVDIR)/extension.timestamp printers-doc assert-clean-tree
-	$(BUMPER) -s pep440 -f dev $(VERSION_TXT)
-	@echo ">>>"
-	@echo ">>> Do your duties (update CHANGES.rst for example), then"
-	@echo ">>> execute “make dev-tag-release”."
-	@echo ">>>"
+dev-release: VERSION_PART = pre_number
+dev-release: RELEASE_KIND = dev-
+dev-release: bump-version
 
 help::
 	@printf "tag-release\n\tComplete the release tagging the working tree\n"
 
-.PHONY: inject-version
-inject-version:
-	sed -i "s/__version__ = '.*'/__version__ = 'v$(VERSION)'/" $(MOD_INIT)
-	sed -i "s/release = '.*'/release = 'v$(VERSION)'/" $(DOCS_CONF)
-
 .PHONY: tag-release
-tag-release: check-release-date check-long-description-markup inject-version
+tag-release: check-release-date check-long-description-markup
 	git commit -a -m "Release $(VERSION)"
 	git tag -a -m "Version $(VERSION)" v$(VERSION)
 
