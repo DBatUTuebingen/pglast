@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.9 (unreleased)
+6.9 (2024-10-31)
 ~~~~~~~~~~~~~~~~
 
 - Fix regression introduced by recent modification to the ``CommonTableExpr`` printer that
