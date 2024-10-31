@@ -3,7 +3,7 @@
 # :Created:   dom 06 ago 2017 23:09:23 CEST
 # :Author:    Lele Gaifax <lele@metapensiero.it>
 # :License:   GNU General Public License version 3 or later
-# :Copyright: © 2017, 2018, 2019, 2021 Lele Gaifax
+# :Copyright: © 2017, 2018, 2019, 2021, 2024 Lele Gaifax
 #
 
 import argparse
@@ -65,9 +65,9 @@ def main(options=None):
 
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + version,)
     parser.add_argument('-p', '--plpgsql', action='store_true', default=False,
-                        help='use the plpgsql parser (and print just the resulting tree)')
+                        help='use the plpgsql parser (implies --parse-tree)')
     parser.add_argument('-t', '--parse-tree', action='store_true', default=False,
-                        help='show just the parse tree of the statement')
+                        help='show the resulting parse tree instead')
     parser.add_argument('-m', '--compact-lists-margin', type=int, default=0,
                         help='use compact form for lists not exceeding the given margin')
     parser.add_argument('-s', '--split-string-literals', type=int, default=0,
