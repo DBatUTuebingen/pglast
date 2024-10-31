@@ -19,8 +19,6 @@ with (here / 'README.rst').open(encoding='utf-8') as f:
     README = f.read()
 with (here / 'CHANGES.rst').open(encoding='utf-8') as f:
     CHANGES = f.read()
-with (here / 'version.txt').open(encoding='utf-8') as f:
-    VERSION = f.read().strip()
 
 
 LIBPG_QUERY_DIR = here / 'libpg_query'
@@ -40,7 +38,7 @@ class BuildLibPgQueryFirst(build_ext):
 
 setup(
     name="pglast",
-    version=VERSION,
+    version="7.0.dev0",
     url="https://github.com/lelit/pglast",
 
     description="PostgreSQL Languages AST and statements prettifier",

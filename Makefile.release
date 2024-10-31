@@ -7,8 +7,7 @@
 #
 
 BUMPER := $(VENVDIR)/bin/bump-my-version bump
-VERSION_TXT := version.txt
-VERSION = $(shell cat $(VERSION_TXT))
+VERSION = $(shell bump-my-version show current_version 2>/dev/null)
 MOD_INIT := pglast/__init__.py
 DOCS_CONF := docs/conf.py
 TWINE := $(VENVDIR)/bin/twine
