@@ -12,6 +12,7 @@ import pprint
 import sys
 
 from pglast import Error, parse_plpgsql, parse_sql, prettify
+from pglast.stream import RawStream
 
 
 def workhorse(args):
@@ -30,6 +31,15 @@ def workhorse(args):
                 json.dump(tree, output, sort_keys=True, indent=2)
             else:
                 pprint.pprint([stmt(skip_none=True) for stmt in tree], output)
+            output.write('\n')
+    elif args.normalize:
+        output = args.outfile or sys.stdout
+        reprinter = RawStream(
+            special_functions=args.special_functions,
+            remove_pg_catalog_from_functions=args.remove_pg_catalog_from_functions,
+            semicolon_after_last_statement=args.semicolon_after_last_statement)
+        with output:
+            output.write(reprinter(statement))
             output.write('\n')
     else:
         try:
@@ -65,9 +75,12 @@ def main(options=None):
 
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + version,)
     parser.add_argument('-p', '--plpgsql', action='store_true', default=False,
-                        help='use the plpgsql parser (and print just the resulting tree)')
+                        help='use the plpgsql parser (implies --parse-tree)')
     parser.add_argument('-t', '--parse-tree', action='store_true', default=False,
-                        help='show just the parse tree of the statement')
+                        help='show the resulting parse tree instead')
+    parser.add_argument('-n', '--normalize', action='store_true', default=False,
+                        help='show the normalized statement, without prettification'
+                        ' (some options below may have no effect)')
     parser.add_argument('-m', '--compact-lists-margin', type=int, default=0,
                         help='use compact form for lists not exceeding the given margin')
     parser.add_argument('-s', '--split-string-literals', type=int, default=0,

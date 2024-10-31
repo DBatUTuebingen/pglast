@@ -378,6 +378,12 @@ Reformat a ``SQL`` statement
         , c
    FROM sometable
 
+   $ echo "select a,b,c from sometable" | pgpp --comma-at-eoln
+   SELECT a,
+          b,
+          c
+   FROM sometable
+
    $ pgpp -S "select a, case when a=1 then 'singular' else 'plural' end from test"
    SELECT a
         , CASE
@@ -416,6 +422,14 @@ Get a more compact representation
    SELECT a, b, c
    FROM st
    WHERE (a = 'longvalue1') AND (b = 'longvalue2')
+
+Get an even more compact, normalized representation
+===================================================
+
+.. code-block:: shell
+
+   $ pgpp --normalize -S "select a,b,c from st    where a='foo'"
+   SELECT a, b, c FROM st WHERE a = 'foo'
 
 Obtain the *parse tree* of a ``SQL`` statement
 ==============================================
@@ -461,7 +475,6 @@ Preserve comments
 .. note:: Preserving comments is always hard and far from a perfect science: not all AST nodes
           carry their exact location, so it is not possible to differentiate between
           ``SELECT * /*comment*/ FROM foo`` and ``SELECT * FROM /*comment*/ foo``.
-
 
 Functions vs SQL syntax
 =======================

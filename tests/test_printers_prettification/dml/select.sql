@@ -497,6 +497,13 @@ WITH cte_1 AS
   SELECT *
   FROM cte_2
 
+with cte_1 as (select 1), cte_2 as (select * from cte_1)
+select * from cte_2
+=
+WITH cte_1 AS (SELECT 1), cte_2 AS (SELECT * FROM cte_1) SELECT * FROM cte_2
+:
+{'raw_stream': True}
+
 SELECT 1 FROM ONLY "public"."produit" x WHERE "produit_id"
 OPERATOR(pg_catalog.=) $1 FOR KEY SHARE OF x
 =
