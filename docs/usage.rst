@@ -3,7 +3,7 @@
 .. :Created:   gio 10 ago 2017 10:06:38 CEST
 .. :Author:    Lele Gaifax <lele@metapensiero.it>
 .. :License:   GNU General Public License version 3 or later
-.. :Copyright: © 2017, 2018, 2019, 2021, 2022 Lele Gaifax
+.. :Copyright: © 2017, 2018, 2019, 2021, 2022, 2024 Lele Gaifax
 ..
 
 .. _usage:
@@ -378,6 +378,12 @@ Reformat a ``SQL`` statement
         , c
    FROM sometable
 
+   $ echo "select a,b,c from sometable" | pgpp --comma-at-eoln
+   SELECT a,
+          b,
+          c
+   FROM sometable
+
    $ pgpp -S "select a, case when a=1 then 'singular' else 'plural' end from test"
    SELECT a
         , CASE
@@ -461,7 +467,6 @@ Preserve comments
 .. note:: Preserving comments is always hard and far from a perfect science: not all AST nodes
           carry their exact location, so it is not possible to differentiate between
           ``SELECT * /*comment*/ FROM foo`` and ``SELECT * FROM /*comment*/ foo``.
-
 
 Functions vs SQL syntax
 =======================
