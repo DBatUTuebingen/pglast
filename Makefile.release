@@ -56,7 +56,7 @@ help::
 	@printf "dev-tag-release\n\tComplete the development release tagging the working tree\n"
 
 .PHONY: dev-tag-release
-dev-tag-release: check-release-date check-long-description-markup inject-version
+dev-tag-release: check-release-date check-long-description-markup
 	git commit -a -m "Development release $(VERSION)"
 	git tag -a -m "Development version $(VERSION)" v$(VERSION)
 
