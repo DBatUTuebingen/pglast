@@ -8,7 +8,7 @@ Changes
 Version 7
 #########
 
-7.0.dev0 (unreleased)
+7.0.dev0 (2024-10-31)
 ~~~~~~~~~~~~~~~~~~~~~
 
 - No visible changes with respect to v6, apart from the support for new/revised syntaxes of
