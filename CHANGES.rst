@@ -8,6 +8,17 @@ Changes
 Version 6
 #########
 
+6.9 (unreleased)
+~~~~~~~~~~~~~~~~
+
+- Fix regression introduced by recent modification to the ``CommonTableExpr`` printer that
+  impacted on the ``RawStream`` renderer (issue `#163`__)
+
+  __ https://github.com/lelit/pglast/issues/163
+
+- Expose the ``RawStream`` renderer in the CLI tool with a new ``--normalize`` option
+
+
 6.8 (2024-10-29)
 ~~~~~~~~~~~~~~~~
 
@@ -25,7 +36,7 @@ Version 6
 
   __ https://cibuildwheel.pypa.io/en/stable/changelog/#v2213
 
-- Improve CTEs printer, reducing horizontal space waste
+- Improve ``CommonTableExpr`` printer, reducing horizontal space waste
 
 
 6.6 (2024-09-30)
