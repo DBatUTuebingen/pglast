@@ -79,7 +79,7 @@ def parse_plpgsql(statement):
          as_sql = parse_sql(STMT)
          pprint([stmt(skip_none=True) for stmt in as_sql])
 
-      you obtain a richer representation\\[#]_ of the statement:
+      you obtain a richer representation\\ [#]_ of the statement:
 
       .. testoutput::
          :options: +ELLIPSIS
