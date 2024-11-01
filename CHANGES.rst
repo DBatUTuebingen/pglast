@@ -30,6 +30,14 @@ Version 7
 Version 6
 #########
 
+6.10 (2024-11-01)
+~~~~~~~~~~~~~~~~~
+
+- Upgrade libpg_query to `16-5.2.0`__
+
+  __ https://github.com/pganalyze/libpg_query/releases/tag/16-5.2.0
+
+
 6.9 (2024-10-31)
 ~~~~~~~~~~~~~~~~
 
