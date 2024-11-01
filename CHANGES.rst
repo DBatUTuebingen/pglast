@@ -8,7 +8,7 @@ Changes
 Version 7
 #########
 
-7.0.dev1 (unreleased)
+7.0.dev1 (2024-11-01)
 ~~~~~~~~~~~~~~~~~~~~~
 
 - Upgrade libpg_query to `17-6.0.0`__
