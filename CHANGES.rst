@@ -8,7 +8,7 @@ Changes
 Version 6
 #########
 
-6.10 (unreleased)
+6.10 (2024-11-01)
 ~~~~~~~~~~~~~~~~~
 
 - Upgrade libpg_query to `16-5.2.0`__
