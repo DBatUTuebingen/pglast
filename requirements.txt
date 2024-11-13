@@ -7,7 +7,7 @@
 
 -r requirements-test.txt
 
-bump-my-version==0.28.0
+bump-my-version==0.28.1
 cython==3.0.11
 pycparser==2.22
 readme-renderer==44.0
