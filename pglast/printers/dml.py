@@ -2170,10 +2170,11 @@ def unlisten_stmt(node, output):
 
 @node_printer(ast.WithClause)
 def with_clause(node, output):
-    relindent = -2
     if node.recursive:
-        relindent -= output.write('RECURSIVE ')
-    output.print_list(node.ctes, relative_indent=relindent)
+        output.write('RECURSIVE ')
+    output.newline()
+    with output.push_indent(amount=2, relative=False):
+        output.print_list(node.ctes)
 
 
 @node_printer(ast.WindowDef)
