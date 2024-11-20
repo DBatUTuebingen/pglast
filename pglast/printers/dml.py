@@ -418,7 +418,6 @@ def common_table_expr(node, output):
         output.newline()
         output.newline()
         output.print_node(node.cycle_clause)
-    output.newline()
 
 
 @node_printer(ast.ConstraintsSetStmt)
